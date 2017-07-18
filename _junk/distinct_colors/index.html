@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>YUV</title>
+  </head>
+  <body>
+    <input id="slider1" onchange="rangeLuma()" type="range" min="0" max="255" value="100" step="0.1" style="width: 100%" /><br/>
+    Number: <input id="number" onchange="drawColors()" type="number" min="0" max="50" value="5" step="1" /><br/>
+    <div id="container">
+      
+    </div>
+    <br/>
+    <canvas id="canvas" width="300" height="300" style="border:1px solid black;"></canvas><br/>
+    <script>
+      var LUMA = document.getElementById('slider1').value;
+      var NUMBER = document.getElementById('number').value;
+      var shades = [
+        {
+          name: "red",
+          centre: [-0.55,0.65],
+          radius: 0.26
+        },
+        {
+          name: "green",
+          centre: [-0.65,-0.6],
+          radius: 0.34
+        },
+        {
+          name: "blue",
+          centre: [0.6,-0.6],
+          radius: 0.28
+        },
+        {
+          name: "purple",
+          centre: [0.6,0.6],
+          radius: 0.26
+        },
+        {
+          name: "grey",
+          centre: [0,0.1],
+          radius: 0.1
+        }
+      ];
+
+      var canvas = document.getElementById('canvas');
+      var ctx = canvas.getContext("2d");
+      var id = ctx.createImageData(1,1);
+      var d  = id.data;
+      var w = canvas.width;
+      var h = canvas.height;
+
+      function getYUVOnPlane(x,y){
+        var u = 256 * (x / canvas.width);
+        var v = 256 * (y / canvas.height);
+        return [u,v];
+      }
+
+      function adraw() {
+        var y = LUMA;
+        for(var xi=0;xi<w;xi++){
+          var u = 2*(xi / w)-1;
+          for(var yi=0;yi<h;yi++){
+            var v = 2*(yi / w)-1;
+            var col = yuv2rgb(y,128*u,128*v);
+
+            ctx.fillStyle = "rgb("+col.r+","+col.g+","+col.b+")";
+            ctx.fillRect( xi, h-yi, 1, 1 );
+          }
+        }
+      }
+
+      function drawColors() {
+        var NUMBER = document.getElementById('number').value;
+        var elem = document.getElementById('container');
+        elem.innerHTML = "";
+        var PS = Math.PI / NUMBER;
+        var YS = 255 / NUMBER;
+        var y = LUMA;
+
+        for(var shade of shades) {
+          for(var i=0;i<NUMBER;i++) {
+            //var ang = i * PS;
+            var y = i * YS;
+            var u = shade.centre[0] ;// + Math.cos(ang)*shade.radius;
+            var v = shade.centre[1] ;// + Math.sin(ang)*shade.radius;
+            var col = yuv2rgb(y,128*u,128*v);
+
+            elem.innerHTML += '<div style="width:50px;height:50px;display:inline-block;background-color:'+"rgb("+col.r+","+col.g+","+col.b+")"+'">'+shade.name+'</div>';
+          }
+          
+          ctx.beginPath();
+          ctx.arc( (w/2)*(1+shade.centre[0]), h - ((h/2)*(1+shade.centre[1])), w*shade.radius, 0, 2 * Math.PI, false);
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = 'black';
+          ctx.stroke();
+        }
+      }
+
+      function rangeLuma(){
+        LUMA = document.getElementById('slider1').value;
+        adraw();
+        drawColors();
+      }
+
+      function yuv2rgb(y,u,v){
+        y=parseInt(y);
+        u=parseInt(u);
+        v=parseInt(v);
+        r=clamp(Math.floor(y+1.4075*v));
+        g=clamp(Math.floor(y-0.3455*u-(0.7169*v)));
+        b=clamp(Math.floor(y+1.7790*u));
+        return({r:r,g:g,b:b});
+      }
+
+      function clamp(n){
+          if(n<0){return(0);}
+          if(n>255){return(255);}
+          return n;
+      }
+
+
+      adraw();
+      drawColors();
+    </script>
+  </body>
+</html>
