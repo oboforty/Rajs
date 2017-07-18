@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+	<title>SLOS</title>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+	<link href="../slos-explorer.css" rel="stylesheet" />
+
+	<script type="text/javascript" src="jquery-2.2.4.min.js"></script>
+	<script type="text/javascript" src="ejs.min.js"></script>
+	<script type="text/javascript" src="../slos.js"></script>
+
+	<script type="text/javascript" src="../programs/explorer.js"></script>
+	<script type="text/javascript" src="../programs/redirect.js"></script>
+</head>
+<body>
+	<h1>Simple file string explorer example</h1>
+	<div id="container"></div>
+
+	<script data-slos-program="explorer" type="text/x-slos-template">
+		<div class="slos-explorer">
+			<div class="slos-explorer-header">
+				Files
+			</div>
+			<div class="slos-explorer-body">
+				<% for(var f in files) { %>
+				<div class="slos-explorer-file" data-slos-select="redirect" data-slos-file="<%=files[f].slid %>">
+					<% if(files[f].type == "dir") { %>
+						<i class="fa fa-file-folder-o"></i>
+					<% } else if(files[f].group != "") { %>
+						<i class="fa fa-file-<%= files[f].group %>-o"></i>
+					<% } else { %>
+						<i class="fa fa-file-o"></i>
+					<% } %>
+
+					<span><%= files[f].filename %></span>
+				</div>
+				<% } %>
+			</div>
+			<div class="slos-explorer-footer"></div>
+		</div>
+	</script>
+
+<script  type="text/javascript">
+	var files = [
+        "5000658708.txt",
+        "5000658708plan.pdf",
+        "image001.png",
+        "image005.png",
+        "image006.png",
+        "image007.png",
+        "image008.png"
+	];
+
+	$.slos.globals.fileOpenUrl = "http://localhost/file/<%=file.filename%>";
+
+	var slos = $("#container").slos({
+        baseProgram: "explorer",
+        showLogo: true,
+        programs: {
+            "explorer": {
+				"template": $('[data-slos-program="explorer"]').html()
+            },
+            "redirect": {
+                "urlformat": $.slos.globals.fileOpenUrl,
+                "newWindow": true
+            },
+        },
+    });
+
+    slos.baseProcess.addFileNames(files);
+</script>
+</body>
+</html>

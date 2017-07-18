@@ -1,0 +1,90 @@
+
+/* Extended text colors */
+.text-brown {
+    color: #A0522D;
+}
+.text-grey {
+    color: #A9A9A9;
+}
+.text-white {
+    color: white;
+}
+.text-wheat {
+    color: #dec9a2;
+}
+.text-skin {
+    color: #e0ac69;
+}
+.text-gold {
+    color: #FFD700;
+}
+
+/* Bootstrap modals as Windows */
+.modal-content.ui-resizable {
+}
+
+.modal-backdrop {
+    background: none;
+}
+
+.modal-skin .modal-body {
+    max-height: 100%
+    min-height: 300px;
+    min-width: 300px;
+}
+
+.modal-skin .modal-content{
+    border: 1px solid #000;
+    border-radius: 4px;
+}
+.modal-window .modal-header {
+    cursor: pointer;
+}
+.modal-skin .modal-header {
+    border-bottom: 1px solid #000;
+    background: rgba(230, 120, 120, 0.48);
+    box-shadow: inset 0 0 84px rgba(255, 154, 0, 0.43);
+}
+.modal-body-overflow {
+    overflow-x: scroll;
+}
+
+/* Old Bootstrap3 classes */
+.big-font {
+    font-size: 24px
+}
+.pointer {
+    cursor: pointer;
+}
+.btn-link {
+    cursor: pointer;
+    color: blue;
+}
+.pull-right {
+  float: right;
+}
+.pull-left {
+  float: left;
+}
+.centered {
+  margin: 0 auto;
+}
+.center {
+  text-align: center;
+}
+.btn-group-justified {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate; }
+  .btn-group-justified .btn,
+  .btn-group-justified .btn-group {
+    float: none;
+    display: table-cell;
+    width: 1%; }
+    .btn-group-justified .btn .btn,
+    .btn-group-justified .btn-group .btn {
+      width: 100%; }
+    .btn-group-justified .btn .dropdown-menu,
+    .btn-group-justified .btn-group .dropdown-menu {
+      left: auto; }

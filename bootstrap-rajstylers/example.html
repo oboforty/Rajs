@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bootstrap windows</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap.rajstylerz.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <!-- remove modal-skin if you want original bs windows -->
+    <div id="myWindows" class="modal modal-skin fade">
+      <div class="modal-dialog modal-lg modal-window" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal header</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              Modal body.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+	<script src="dist/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    <script>
+        // resizeable windows with bootstrap modals and jquery ui:
+
+        $('.modal-window').draggable({
+            handle: ".modal-header"
+        });
+        $('.modal-window .modal-content').resizable({
+            //alsoResize: ".modal-dialog",
+            minHeight: 300,
+            minWidth: 300
+        });
+        $('.modal-window .modal-dialog').draggable();
+        $('.modal-window .modal-header').mousedown(function(e) {
+            if (e.which == 2) $(this).closest('.modal').modal('hide');
+        });
+        $(function(){
+
+        	setTimeout(function(){
+        		$("#myWindows").modal("show");
+        	}, 800);
+        });
+    </script>
+  </body>
+</html>

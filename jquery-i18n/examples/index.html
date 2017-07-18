@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+		<title>jQuery i18n Plugin</title>
+
+		<script type="text/javascript" src="jquery-2.2.4.min.js"></script>
+		<script type="text/javascript" src="../jquery.i18n.js"></script>
+	</head>
+	<body>
+		<script  type="text/javascript">
+		$(document).ready(function(){
+			i18n_dict = {
+				"example_1_finnish"				: "Hello",
+				"example_2_finnish"				: "Hello, {{name}}",
+				"example_3_dom"					: "Hello, Dom!",
+				"example_4_dict" 				: "Your browser window is {{x}} x {{y}}",
+				"example_5_list" 				: "Your browser window is {{0}} x {{1}}",
+			};
+
+			$.i18n.load(i18n_dict);
+			
+
+			$('input#translate_button').click( function(event) {
+				$('div#example1')._t('example_1_finnish');
+				$('div#example2')._t('example_2_finnish', {name:"Anonymous"});
+				$('div#example4')._t('example_4_dict', {x:$(document).width(), y:$(document).height()});
+				$('div#example5')._t('example_5_list', $(document).width(), $(document).height());
+
+				$.i18n.applyDom();
+			});
+		});
+		</script>
+
+	<p>
+		Click the button to translate the following text into some examples</a>
+	</p>
+
+	<div id='example1'>Simple translation</div>
+	<div id='example2'>Translation with placeholders</div>
+	<div id='example3' data-trans-key="example_3_dom">Translation with dom-defined key</div>
+	<div id='example4'>Translation with placeholders as dict</div>
+	<div id='example5'>Translation with placeholders as list</div>
+	<div>
+		Translate custom html attribute:
+		<input id='example6' data-trans-key="example_1_finnish" data-trans-target="placeholder" placeholder="Untranslated placeholder" />
+	</div>
+	<input type='button' id='translate_button' value='Internationalize!' />
+</body>
+</html>
