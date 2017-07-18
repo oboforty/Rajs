@@ -1,5 +1,3 @@
-# Rajs
-A collection of very useful javascript modules for everyday web development.
 # ![alt rajs](https://github.com/oboforty/Rajs/blob/master/logo.png "Ra.js") Ra.js
 
 A collection of various useful javascript modules for everyday web development.
