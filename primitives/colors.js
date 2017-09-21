@@ -15,6 +15,15 @@ function yuv2rgb(y,u,v){
     return({r:r,g:g,b:b});
 }
 
+function getContrast(hex) {
+    //hex = hex.substr(1);
+    var r = parseInt(hex.substr(1, 2), 16),
+        g = parseInt(hex.substr(3, 2), 16),
+        b = parseInt(hex.substr(5, 2), 16),
+        yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (yiq >= 128) ? 'black' : 'white';
+}
+
 var shades = {
 	red:    {centre: [-0.55,0.65],  radius: 0.26},
 	green:  {centre: [-0.65,-0.6],  radius: 0.34},

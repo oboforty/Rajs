@@ -48,6 +48,9 @@
 .modal-body-overflow {
     overflow-x: scroll;
 }
+.modal-xl {
+  max-width: 1200px;
+}
 
 /* Old Bootstrap3 classes */
 .big-font {
@@ -88,3 +91,6 @@
     .btn-group-justified .btn .dropdown-menu,
     .btn-group-justified .btn-group .dropdown-menu {
       left: auto; }
+.btn-circle {
+  border-radius: 50%;
+}
