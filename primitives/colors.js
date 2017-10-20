@@ -24,6 +24,27 @@ function getContrast(hex) {
     return (yiq >= 128) ? 'black' : 'white';
 }
 
+function shadeColor(hex, lum) {
+
+    // validate hex string
+    hex = String(hex).replace(/[^0-9a-f]/gi, '');
+    if (hex.length < 6) {
+        hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    }
+    lum = lum || 0;
+
+    // convert to decimal and change luminosity
+    var rgb = "#", c, i;
+    for (i = 0; i < 3; i++) {
+        c = parseInt(hex.substr(i*2,2), 16);
+        c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+        rgb += ("00"+c).substr(c.length);
+    }
+
+    return rgb;
+}
+
+
 var shades = {
 	red:    {centre: [-0.55,0.65],  radius: 0.26},
 	green:  {centre: [-0.65,-0.6],  radius: 0.34},
@@ -39,6 +60,27 @@ function randomShade(shade) {
     var u = shade.centre[0] ;// + Math.cos(ang)*shade.radius;
     var v = shade.centre[1] ;// + Math.sin(ang)*shade.radius;
     return yuv2rgb(y,128*u,128*v);
+}
+
+function compareColors(hex1, hex2) {
+    // get red/green/blue int values of hex1
+    var r1 = parseInt(hex1.substring(0, 2), 16);
+    var g1 = parseInt(hex1.substring(2, 4), 16);
+    var b1 = parseInt(hex1.substring(4, 6), 16);
+    // get red/green/blue int values of hex2
+    var r2 = parseInt(hex2.substring(0, 2), 16);
+    var g2 = parseInt(hex2.substring(2, 4), 16);
+    var b2 = parseInt(hex2.substring(4, 6), 16);
+    // calculate differences between reds, greens and blues
+    var r = 255 - Math.abs(r1 - r2);
+    var g = 255 - Math.abs(g1 - g2);
+    var b = 255 - Math.abs(b1 - b2);
+    // limit differences between 0 and 1
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    // 0 means opposit colors, 1 means same colors
+    return (r + g + b) / 3;
 }
 
 function toColor(hashable, transparent) {

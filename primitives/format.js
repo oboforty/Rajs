@@ -4,7 +4,7 @@ function estimation(num) {
         return (num/1000).toFixed(1) + 'k';
     else if (num > 999999)
         return (num/1000000).toFixed(1) + 'M';
-    return num;
+    return String(num);
 }
 
 function formatNumber(x) {
