@@ -19,7 +19,7 @@ function IsoRenderer(TW, OFFSETX, OFFSETY) {
 	    return [posX, posY];
 	}
 
-	this.screenToIso = function(posX, posY)
+	this.screenToIso = function(posX, posY, round)
 	{
 		var TW = this.TW;
 		posX -= this.OFFSETX;
@@ -28,7 +28,10 @@ function IsoRenderer(TW, OFFSETX, OFFSETY) {
 	    var x = (posX / (TW / 2) + posY / (TW / 4))/2;
 	    var y = posY / (TW / 4) - x;
 
-	    return [Math.round(x), Math.round(y)];
+        if (round)
+    	    return [Math.round(x), Math.round(y)];
+    	else
+    	    return [x, y];
 	}
 
 	this.getMousePos = function(canvas, evt) {
@@ -99,6 +102,25 @@ function IsoRenderer(TW, OFFSETX, OFFSETY) {
 		this.ctx.fillText(text, offX+ pos[0], offY + pos[1]);
 	}
 
+	this.drawText = function(text, x,y, offX, offY, color, color2) {
+		var pos = this.isoToScreen(x,y);
+		var TW = this.TW;
+		offX += this.OFFSETX;
+		offY += this.OFFSETY;
+
+		this.ctx.font = "bold 14px Arial";
+		this.ctx.lineWidth = 1;
+		this.ctx.textBaseline = 'middle';
+		this.ctx.textAlign = "center";
+
+		if (color2) {
+            this.ctx.strokeStyle = color2;
+            this.ctx.strokeText(text, offX+ pos[0], offY + pos[1]);
+		}
+		this.ctx.fillStyle = color;
+		this.ctx.fillText(text, offX+ pos[0], offY + pos[1]);
+	}
+
 	this.drawWire = function(color, x,y, offX, offY, block) {
 		offX += this.OFFSETX;
 		offY += this.OFFSETY;
@@ -122,8 +144,10 @@ function IsoRenderer(TW, OFFSETX, OFFSETY) {
 		}
 	}
 
-	this.renderIsoFormat = function(W,H,map) {
-	    var W = map.meta.width, H = map.meta.height;
+	this.renderIsoFormat = function(map) {
+	    var W = map.meta.width, H = map.meta.height,
+	        T = map.meta.contentType || 'map';
+
 	    if (map.meta.wireframe) {
 	        var wire = map.meta.wireframe;
             for(var y=0; y<H; y++) for(var x=0;x<W;x++) {
@@ -132,10 +156,20 @@ function IsoRenderer(TW, OFFSETX, OFFSETY) {
 	    }
 
         for(var y=0; y<H; y++) for(var x=0;x<W;x++) {
-            var tile = map.content[x+','+y].split(':');
-            if (typeof tile !== 'undefined') {
-                var type = tile[0], id = tile[1];
-                this.drawTile(type, id, x,y,0,0);
+            var tile = T == 'map' ? map.content[x+','+y] : map.content[y][x];
+
+            if (typeof tile !== 'undefined' && tile !== null) {
+                if (Array.isArray(tile)) {
+                    for(var ltile of tile) {
+                        ltile = ltile.split('/');
+                        var type = ltile[0], id = parseInt(ltile[1]);
+                        this.drawTile(type, id, x,y,0,0);
+                    }
+                } else {
+                    tile = tile.split('/');
+                    var type = tile[0], id = parseInt(tile[1]);
+                    this.drawTile(type, id, x,y,0,0);
+                }
             }
         }
 	}
