@@ -1,9 +1,10 @@
 import json
+from collections import OrderedDict
 from PIL import Image
 
 with open("nuts.json") as fh:
 	countries = json.load(fh)
-images = {}
+images = OrderedDict()
 for country in countries:
 	images[country] = Image.open("png100px/" + country.lower() + ".png")
 widths, heights = zip(*(i.size for f,i in images.items()))
