@@ -45,8 +45,10 @@
     background: rgba(230, 120, 120, 0.48);
     box-shadow: inset 0 0 84px rgba(255, 154, 0, 0.43);
 }
-.modal-body-overflow {
-    overflow-x: scroll;
+.modal-overflow {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 450px;
 }
 .modal-xl {
   max-width: 1200px;
@@ -93,4 +95,11 @@
       left: auto; }
 .btn-circle {
   border-radius: 50%;
+}
+.unselectable {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }

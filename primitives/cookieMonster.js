@@ -6,7 +6,7 @@ var Cookie = {
         return null;
     },
 
-    create: function(name,value,days) {
+    set: function(name,value,days) {
         var expires = "";
         if (days) {
             var date = new Date();
@@ -23,6 +23,7 @@ var Cookie = {
 
 var Params = {
     params: {},
+    inited: false,
     init: function() {
         var prmstr = window.location.search.substr(1);
         if (prmstr != null) {
@@ -35,6 +36,7 @@ var Params = {
     },
 
     get: function(name) {
+        if (!this.inited) {this.init(); this.inited=true;}
         return this.params[name];
     },
 };
