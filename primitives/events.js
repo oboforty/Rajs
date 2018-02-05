@@ -1,15 +1,16 @@
 var Events = {
-	this.events = {};
-	this.on = function(eventName, callback) {
+	events: {},
+
+	on: function(eventName, callback) {
 		if (!this.events[eventName])
 			this.events[eventName] = [];
 		this.events[eventName].push(callback);
-	}
+	},
 
-	this.fire = function(eventName, args) {
+	fire: function(eventName, args, context) {
 		if (!this.events[eventName])
 			this.events[eventName] = [];
 		for (var event of this.events[eventName])
-			event.apply(args);
+			event.apply(context, args);
 	}
 };
