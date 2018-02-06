@@ -16,6 +16,15 @@ var Events = {
 		this.callbacks[eventName].push(callback);
 	},
 
+	// Remove all subscribers
+	off: function(eventName) {
+		if (this.events[eventName])
+			this.events[eventName] = [];
+
+		if (this.callbacks[eventName])
+			this.callbacks[eventName] = [];
+	},
+
 	// Start event propagation (for both kinds)
 	fire: function(eventName, args, context) {
 		// events
