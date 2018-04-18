@@ -1,9 +1,0 @@
-
-- separate connector and loader (like i18n)
-	- add connector js layer
-- runnable programs
-	- register new program
-- event everywhere!
-- core:
-	- module loader
-	- 
