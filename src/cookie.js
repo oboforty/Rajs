@@ -1,9 +1,9 @@
 var Cookie = {
-    get: function(name) {
+    get: function(name, default) {
         var value = "; " + document.cookie;
         var parts = value.split("; " + name + "=");
         if (parts.length == 2) return parts.pop().split(";").shift();
-        return null;
+        return default;
     },
 
     set: function(name,value,days) {

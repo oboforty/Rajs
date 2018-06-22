@@ -13,9 +13,9 @@ var Params = {
         }
     },
 
-    get: function(name) {
+    get: function(name, default) {
         if (!this.inited) {this.init(); this.inited=true;}
-        return this.params[name];
+        return this.params[name] || default;
     },
 
     set: function(key, value) {
