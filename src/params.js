@@ -1,8 +1,8 @@
 
-var Params = {
-    params: {},
-    inited: false,
-    init: function() {
+var Params = new (function(){
+    this.params= {},
+    this.inited= false,
+    this.init= function() {
         var prmstr = window.location.search.substr(1);
         if (prmstr != null) {
             var prmarr = prmstr.split("&");
@@ -11,14 +11,18 @@ var Params = {
                 this.params[tmparr[0]] = tmparr[1];
             }
         }
-    },
+    };
 
-    get: function(name, default) {
+    this.get = function(name,def) {
         if (!this.inited) {this.init(); this.inited=true;}
-        return this.params[name] || default;
-    },
+        if (this.params[name]) {
+            return this.params[name];
+        } else {
+            return def;
+        }
+    };
 
-    set: function(key, value) {
+    this.set= function(key, value) {
         key = encodeURI(key); value = encodeURI(value);
 
         var kvp = document.location.search.substr(1).split('&');
@@ -39,6 +43,7 @@ var Params = {
 
         //this will reload the page, it's likely better to store this until finished
         document.location.search = kvp.join('&'); 
-    }
-};
-Params.init();
+    };
+
+    this.init();
+})();

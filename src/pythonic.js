@@ -47,3 +47,15 @@ function round(n, digits) {
   else
     return parseFloat(n.toFixed(digits));
 }
+
+String.prototype.title = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+}
+
+String.prototype.lower = function() {
+  return this.toLowerCase(); 
+}
+
+String.prototype.upper = function() {
+  return this.toUpperCase();
+}

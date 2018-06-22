@@ -1,12 +1,15 @@
-var Cookie = {
-    get: function(name, default) {
+var Cookie = new (function(){
+    this.get = function(name,def) {
         var value = "; " + document.cookie;
         var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return parts.pop().split(";").shift();
-        return default;
-    },
+        if (parts.length == 2) {
+            return parts.pop().split(";").shift();
+        } else {
+            return def;
+        } 
+    };
 
-    set: function(name,value,days) {
+    this.set = function(name,value,days) {
         var expires = "";
         if (days) {
             var date = new Date();
@@ -14,9 +17,9 @@ var Cookie = {
             expires = "; expires=" + date.toUTCString();
         }
         document.cookie = name + "=" + value + expires + "; path=/";
-    },
+    };
 
-    delete: function(name) {
+    this.delete = function(name) {
         this.createCookie(name,"",-1);
-    },
-};
+    };
+})();

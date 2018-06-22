@@ -12,7 +12,7 @@ for f in listdir("src/"):
 			content += fh.read()
 
 print("Writing files...")
-with open('rajs.min.js', 'w') as fh:
+with open('ra.min.js', 'w') as fh:
 	min1 = jsmin(content)
 	min1 = copy + min1.replace("\n", " ")
 	fh.write(min1)

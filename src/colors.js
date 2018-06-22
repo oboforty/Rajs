@@ -71,7 +71,7 @@ var Color = function (rgba) {
   };
 
   this.rgba = function() {
-    if (typeof this[3] === 'undefined')
+    if (typeof this[3] !== 'undefined')
       return 'rgba('+this[0]+','+this[1]+','+this[2]+','+this[3]+')';
     else
       return 'rgb('+this[0]+','+this[1]+','+this[2]+')';
@@ -96,7 +96,11 @@ var Color = function (rgba) {
   };
 
   this.clone = function() {
-    var cc = this.slice(0);
+    var cc = new Color(Boolean(this[3]));
+    cc[0] = this[0];
+    cc[1] = this[1];
+    cc[2] = this[2];
+    cc[3] = this[3];
     return cc;
   };
 
@@ -109,8 +113,8 @@ var Color = function (rgba) {
         return;
 
       if (typeof rgba == 'string') {
-        if (ColorUtil.colors[colour.toLowerCase()])
-          rgba = ColorUtil.colors[colour.toLowerCase()];
+        if (ColorUtil.colors[rgba.toLowerCase()])
+          rgba = ColorUtil.colors[rgba.toLowerCase()];
 
         if (rgba.substr(0,3) == 'rgb') {
           var parse = rgba.substr(3);
