@@ -111,3 +111,6 @@ var n = 235;
 - wasm framework
 - extende Image functionality
 - More types (Complex, Quaternion, Sound, Page)
+- i18n
+- Extended string/number functions: plural, grammar handling
+- Symbolic mathematics
