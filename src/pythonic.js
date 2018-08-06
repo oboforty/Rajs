@@ -60,6 +60,12 @@ String.prototype.upper = function() {
   return this.toUpperCase();
 };
 
+Set.prototype.update = function(arr) {
+  for (var item of arr) {
+    this.add(item);
+  }
+};
+
 
 function str(val) {
   if (typeof val === 'undefined')
@@ -122,9 +128,12 @@ function defaultdict(deftype, isFunc) {
         return target[name];
       else if (typeof deftype === 'function') {
         if (isFunc)
-          return deftype();
+          var v = deftype();
         else
-          return new deftype();
+          var v = new deftype();
+
+        target[name] = v;
+        return v
       }
     }
   });

@@ -20,6 +20,6 @@ var Cookie = new (function(){
     };
 
     this.delete = function(name) {
-        this.createCookie(name,"",-1);
+        this.set(name,"",-1);
     };
 })();
