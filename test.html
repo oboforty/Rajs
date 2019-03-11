@@ -4,12 +4,16 @@
   <title></title>
 </head>
 <body>
+  <div id="test"></div>
 
-  <script type="text/javascript" src="src/hotkeys.js"></script>
+  <script type="text/javascript" src="src/wasm.js"></script>
   <script type="text/javascript">
-    Hotkeys.on('ctrl+B', function(e) {
-      alert("Helloka");
-    });
+
+    let wapp = load_wasm('hello.wasm');
+
+    let result = wapp.add_two_numbers(72, -30);
+
+    $('#test').innerHTML = str(result);
   </script>
 </body>
 </html>

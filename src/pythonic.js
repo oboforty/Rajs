@@ -60,12 +60,30 @@ String.prototype.upper = function() {
   return this.toUpperCase();
 };
 
+String.prototype.encode = function(encoding) {
+  let textEncoder = new TextEncoder(encoding);
+
+  return textEncoder.encode(this);
+};
+
+ArrayBuffer.prototype.decode = function(encoding, opts) {
+  let textDecoder = new TextDecoder(encoding);
+
+  return textDecoder.decode(this, opts);
+};
+
+// Uint8Array.prototype.decode = ArrayBuffer.prototype.decode;
+// Uint32Array.prototype.decode = ArrayBuffer.prototype.decode;
+
+String.prototype.format = function() {
+
+};
+
 Set.prototype.update = function(arr) {
   for (var item of arr) {
     this.add(item);
   }
 };
-
 
 function str(val) {
   if (typeof val === 'undefined')
@@ -121,6 +139,19 @@ function list(val) {
   return l;
 }
 
+function bytes(data, encoding) {
+  if (Array.isArray(data))
+    if (encoding == 'utf-8')
+      return new Uint32Array(data);
+    else if (encoding == 'ascii' || !encoding)
+      return new Uint8Array(data);
+  else if (typeof data === 'string')
+    return data.encode(encoding);
+
+  
+};
+
+
 function defaultdict(deftype, isFunc) {
   return new Proxy({}, {
     get: function(target, name) {
@@ -137,4 +168,12 @@ function defaultdict(deftype, isFunc) {
       }
     }
   });
+}
+
+function choice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function print(str) {
+  console.log(str);
 }

@@ -142,7 +142,7 @@ var Color = function (rgba) {
         if (rgba === true)
          this.push(0);
       } else if (typeof rgba === 'number') {
-        var num = hashable*2654435761 % Math.pow(2, 32);
+        var num = rgba*2654435761 % Math.pow(2, 32);
         num >>>= 0;
         if (!this[3]) this.push(0);
         this[2] = num & 0xFF;
@@ -151,11 +151,11 @@ var Color = function (rgba) {
         this[3] = ( (num & 0xFF000000) >>> 24 ) / 255;
       } else if (typeof rgba === 'object') {
         if (rgba.r) this[0] = rgba.r;
-        if (rgba.g) this[1] = rgba.r;
-        if (rgba.b) this[2] = rgba.r;
+        if (rgba.g) this[1] = rgba.g;
+        if (rgba.b) this[2] = rgba.b;
         if (rgba.a) this.push(rgba.a);
       }
-  }).bind(this)(rgba);
+  }).bind(this)(arguments.length > 1 ? list(arguments) : rgba);
 };
 
 Color.prototype = Array.prototype;
