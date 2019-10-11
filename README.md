@@ -70,12 +70,13 @@ random                      // random stuff!
 - *sniffs* **WE NEED MORE PYTHON**
 
 ### Functionalities that ra.js will never cover by philosophy:
-- date/time handling
-- full random functionality
-- cryptography
-- i18n
-- audio and video
-- fingerprint and browser detection
-- code highlighting / editors
-- any GUI related, validation or form widgets
-- general framework
+Despite the fact that I believe that frontend developers should avoid js hell, I think these functionalities are more serious and can be handled way better by more mature libraries/frameworks:
+
+- **dom or general framework :** vue, angular, react
+- **date/time handling :** moment
+- **full random functionality :** 
+- **cryptography :** webcrypto
+- **i18n :** i18n.js
+- **audio and video :** buzz.js, howler, jsplayer, many more
+- **fingerprint and browser detection :** fingerprint2.js, browser.js
+- **code highlighting / editors :** codemirror
