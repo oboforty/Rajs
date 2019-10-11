@@ -70,7 +70,7 @@ random                      // random stuff!
 - *sniffs* **WE NEED MORE PYTHON**
 
 ### Functionalities that ra.js will never cover by philosophy:
-Despite the fact that I believe that frontend developers should avoid js hell, I think these functionalities are more serious and can be handled way better by more mature libraries/frameworks:
+Despite the fact that I believe that frontend developers should avoid npm hell, I think these functionalities are more serious and can be handled way better by more mature libraries/frameworks:
 
 - **dom or general framework :** vue, angular, react
 - **date/time handling :** moment
