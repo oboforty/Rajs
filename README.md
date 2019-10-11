@@ -1,4 +1,8 @@
-# ![alt rajs](https://github.com/oboforty/Rajs/blob/master/logo.png "Ra.js") Ra.js
+<p align="center">
+  <img src="https://github.com/oboforty/Rajs/blob/master/logo.png">
+</p>
+
+# Ra.js
 
 A collection of various useful javascript modules for everyday web development.
 Version 2.0
