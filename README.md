@@ -2,10 +2,9 @@
   <img src="https://github.com/oboforty/Rajs/blob/master/logo.png">
 </p>
 
-# Ra.js
+# Ra.js - v2
+An all-in-one javascript library. A collection of various useful javascript modules for everyday web development.
 
-A collection of various useful javascript modules for everyday web development.
-Version 2.0
 
 ## Documentation:
 
@@ -60,3 +59,23 @@ Math.log                    //-> now has a second parameter for log base
 Math.rad2deg, Math.deg2rad  //-> constants
 random                      // random stuff!
 ```
+
+## Meta
+### Ra.js todos:
+- money and number formatting
+- wasm wrapper
+- worker wrapper
+- polyfill
+- seeded random
+- *sniffs* **WE NEED MORE PYTHON**
+
+### Functionalities that ra.js will never cover by philosophy:
+- date/time handling
+- full random functionality
+- cryptography
+- i18n
+- audio and video
+- fingerprint and browser detection
+- code highlighting / editors
+- any GUI related, validation or form widgets
+- general framework
