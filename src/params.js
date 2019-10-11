@@ -1,49 +1,54 @@
 
-var Params = new (function(){
-    this.params= {},
-    this.inited= false,
-    this.init= function() {
-        var prmstr = window.location.search.substr(1);
-        if (prmstr != null) {
-            var prmarr = prmstr.split("&");
-            for ( var i = 0; i < prmarr.length; i++) {
-                var tmparr = prmarr[i].split("=");
-                this.params[tmparr[0]] = tmparr[1];
-            }
-        }
-    };
+const Params = (function() {
+  const trg = {};
 
-    this.get = function(name,def) {
-        if (!this.inited) {this.init(); this.inited=true;}
-        if (this.params[name]) {
-            return this.params[name];
-        } else {
-            return def;
-        }
-    };
+  let prmstr = window.location.search.substr(1);
 
-    this.set= function(key, value) {
-        key = encodeURI(key); value = encodeURI(value);
+  if (prmstr != null) {
+    let prmarr = prmstr.split("&");
+    for (let i = 0; i < prmarr.length; i++) {
+      let tmparr = prmarr[i].split("=");
+      trg[tmparr[0]] = tmparr[1];
+    }
+  }
 
-        var kvp = document.location.search.substr(1).split('&');
+  return new Proxy(trg, {
 
-        var i=kvp.length; var x; while(i--) 
-        {
-            x = kvp[i].split('=');
+    get: function(target, name) {
+      return target[name];
+    },
 
-            if (x[0]==key)
-            {
-                x[1] = value;
-                kvp[i] = x.join('=');
-                break;
-            }
-        }
+    set: function(target, name, val) {
+      target[name] = value;
 
-        if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+      var key = encodeURI(name), value = encodeURI(val);
 
-        //this will reload the page, it's likely better to store this until finished
-        document.location.search = kvp.join('&'); 
-    };
+      var kvp = document.location.search.substr(1).split('&');
 
-    this.init();
+      var i=kvp.length; var x; while(i--) 
+      {
+          x = kvp[i].split('=');
+
+          if (x[0]==key)
+          {
+              x[1] = value;
+              kvp[i] = x.join('=');
+              break;
+          }
+      }
+
+      if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+
+      //this will reload the page, it's likely better to store this until finished
+      document.location.search = kvp.join('&'); 
+    },
+
+    has: function(target, name) {
+      return name in  target;
+    },
+
+    deleteProperty: function(target, name) {
+      delete target[name];
+    },
+  });
 })();

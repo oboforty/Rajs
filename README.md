@@ -14,103 +14,54 @@ A collection of various useful javascript modules for everyday web development.
 
 ## Documentation:
 
-### Cookie
+### Global objects
 ```javascript
-var cookie_value = Cookie.get('cookie_value', -1);
-if (cookie_value === -1) {
-  cookie_value = 5;
-  Cookie.set('cookie_value', cookie_value);
-} else {
-  if (cookie_value > 10) {
-    Cookie.delete('cookie_value');
-  } else {
-    cookie_value += 1;
-    Cookie.set('cookie_value', cookie_value);
-  }  
+Color             // Generic color class -- handles everything!
+Cookies           // Smart proxy object to store cookies as key-value pairs
+Params            // Smart proxy object to store URL parameters as key-value pairs
+Events            // Define and fire custom events
+Hotkeys           // Define global hotkeys and hotkey combos
+Import            // Import css and js files programmatically
+Title             // Set the document title using a state machine (reset/set)
+```
+
+### Number and String formatting
+```javascript
+const N = 1234;
+
+N.estimation();   // 1.2k
+N.roman();        // CXXIV
+N.ordinal();      // 1234th
+```
+
+### Pythonic functions
+```javascript
+// pythonic global functions:
+len, any, all, round, enumerate, range, time, print, sum
+
+// pythonic type casts
+str, int, float, bool, dict, list, bool, bytes
+
+// Type method overrides:
+Array.remove, Array.decode
+String.format, String.lower, String.upper, String.title, String.encode
+
+// extras:
+defaultdict
+
+// we all know Object.keys and Object.values, but:
+const obj = { "hello": "world" };
+
+for (let [key, value] of Object.items(obj)) {
+  console.log(key, '->', value);
 }
+
+
 ```
 
-### Params
+### Other
 ```javascript
-var page = Params.get('page_id', null);
-
-if (page) {
-  alert("Opening page " + page_id);
-}
+Math.log                    //-> now has a second parameter for log base
+Math.rad2deg, Math.deg2rad  //-> constants
+random                      // random stuff!
 ```
-
-### Events
-
-### Containers
-Length function
-```javascript
-  var a = [];
-  var b = {};
-  var c = new Set([]);
-  var d = "";
-  
-  console.log( len(a) );
-  console.log( len(b) );
-  console.log( len(c) );
-  console.log( len(d) );
-```
-
-Ranges
-```javascript
-  for (var i of range(12)) {
-    console.log(i);
-  }
-```
-
-### Strings
-```javascript
-  var s = "hello world!";
-  console.log( s.title() ); // Hello world!
-  
-```
-
-### Numbers
-Round:
-```javascript
- var n = 235.1295;
- 
- console.log( round(n, 2) );
-```
-
-
-Estimation:
-```javascript
- var n = 252;
- console.log( n.estimation() ); // 252
- n *= 100;
- console.log( n.estimation() ); // 25.2k
- n *= 100;
- console.log( n.estimation() ); // 25.2M
- n *= 1000;
- console.log( n.estimation() ); // 25.2B
-```
-
-Ordinal numbers:
-```javascript
- var n = 235;
- console.log( n.ordinal() ); // 235th
-```
-
-Roman numbers:
-```javascript
-var n = 235;
- console.log( n.roman() ); // CCXXXV
-```
-
-
-## Future plans
-- More pythonic functions
-- More missing features from other languages (C# / Java / TypeScript / Ruby)
-- More number -> string representations
-- POST/PUT/PATCH/DELETE handling for Params
-- wasm framework
-- extende Image functionality
-- More types (Complex, Quaternion, Sound, Page)
-- i18n
-- Extended string/number functions: plural, grammar handling
-- Symbolic mathematics

@@ -26,6 +26,19 @@ var Color = function (rgba) {
 
     return col0;
   };
+
+  this.interpolate = function(col, p) {
+    let cc = [];
+
+    for (let i of range(3)) {
+      let A = this[i], B = col[i];
+
+      let rng = B-A, min = Math.min(A,B);
+      cc[i] = Math.round(rng<0 ? (-rng*(1-p)) : rng*p + min);
+    }
+
+    return new Color(cc);
+  };
   
   this.cmp = function(col) {
     var r = 255 - Math.abs(this[0] - col[0]);
@@ -60,6 +73,16 @@ var Color = function (rgba) {
     return (this.yiq() >= 128) ? 'black' : 'white';
   };
 
+  this.complement = function() {
+    let [h,s,l] = this.to_hsl();
+    
+    h *= 360;
+    h += 180;
+    h = h % 360;
+
+    return new Color(`hsl(${round(h)},${round(s*100)}%,${round(l*100)}%)`);
+  };
+
   this.a = function(transparency) {
     var c = this.clone();
     c[3] = transparency;
@@ -81,11 +104,73 @@ var Color = function (rgba) {
     return 'rgb('+this[0]+','+this[1]+','+this[2]+')';
   };
 
+  this.hsl = function() {
+    let [h,s,l] = this.to_hsl();
+
+    return `hsl(${round(h*360)},${round(s*100)}%,${round(l*100)}%)`;
+  };
+
+  this.hsv = function() {
+    let [h,s,v] = this.to_hsv();
+
+    return `hsv(${round(h*360)},${round(s*100)}%,${round(l*100)}%)`;
+  };
+
   this.yuv = function() {
     var y = [0,0,0];
     if (this[3])
       y.push(this[3]);
 
+  };
+
+  this.to_hsl = function() {
+    let [r,g,b] = this;
+    r /= 255, g /= 255, b /= 255;
+
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+
+    if (max == min) {
+      h = s = 0; // achromatic
+    } else {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+
+      h /= 6;
+    }
+
+    return [ h, s, l ];
+  };
+
+  this.to_hsv = function() {
+    let [r,g,b] = this;
+    r /= 255, g /= 255, b /= 255;
+
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, v = max;
+
+    var d = max - min;
+    s = max == 0 ? 0 : d / max;
+
+    if (max == min) {
+      h = 0; // achromatic
+    } else {
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+
+      h /= 6;
+    }
+
+    return [ h, s, v ];
   };
 
   this.hex = function() {
@@ -105,33 +190,107 @@ var Color = function (rgba) {
   };
 
   (function(rgba) {
-      this.push(0);
-      this.push(0);
-      this.push(0);
+    this.push(0);
+    this.push(0);
+    this.push(0);
 
       if (typeof rgba === 'undefined')
         return;
-
       if (typeof rgba == 'string') {
-        if (ColorUtil.colors[rgba.toLowerCase()])
-          rgba = ColorUtil.colors[rgba.toLowerCase()];
+        rgba = rgba.toLowerCase();
 
-        if (rgba.substr(0,3) == 'rgb') {
-          var parse = rgba.substr(3);
-          if (parse[0] == 'a')
-            rgba = rgba.substr(2, rgba.length-1).split(',');
-          else
-            rgba = rgba.substr(1, rgba.length-1).split(',');
-        } else if (rgba.substr(1) == '#') {
-          var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-          
-          if (result) {
-            this[0] = parseInt(result[1], 16);
-            this[1] = parseInt(result[2], 16);
-            this[2] = parseInt(result[3], 16);
-          }
-        } else {
+        var matchFormat = /rgb\((\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})\)/;
+        var match = matchFormat.exec(rgba);
+        if (match !== null) {
+          this[0] = match[1];
+          this[1] = match[2];
+          this[2] = match[3];
+          return;
         }
+
+        var matchFormat = /rgba\((\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})\)/;
+        var match = matchFormat.exec(rgba);
+        if (match !== null) {
+          this[0] = match[1];
+          this[1] = match[2];
+          this[2] = match[3];
+          this[3] = match[4];
+          return;
+        }
+
+        var matchFormat = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+        var match = matchFormat.exec(rgba);
+        if (match !== null) {
+          this[0] = parseInt(match[1], 16);
+          this[1] = parseInt(match[2], 16);
+          this[2] = parseInt(match[3], 16);
+          return;
+        }
+
+        var matchFormat = /hsv\((\d{1,3}),\s?(\d{1,3}\%),\s?(\d{1,3}\%)\)/;
+        var match = matchFormat.exec(rgba);
+        if (match !== null) {
+          var r, g, b;
+          let h = match[1]/360;
+          let s = match[2].substr(0,match[2].length-1) / 100;
+          let v = match[3].substr(0,match[3].length-1) / 100;
+
+          var i = Math.floor(h * 6);
+          var f = h * 6 - i;
+          var p = v * (1 - s);
+          var q = v * (1 - f * s);
+          var t = v * (1 - (1 - f) * s);
+
+          switch (i % 6) {
+            case 0: r = v, g = t, b = p; break;
+            case 1: r = q, g = v, b = p; break;
+            case 2: r = p, g = v, b = t; break;
+            case 3: r = p, g = q, b = v; break;
+            case 4: r = t, g = p, b = v; break;
+            case 5: r = v, g = p, b = q; break;
+          }
+
+          this[0] = round(r*255);
+          this[1] = round(g*255);
+          this[2] = round(b*255);
+          return;
+        }
+
+        var matchFormat = /hsl\((\d{1,3}),\s?(\d{1,3}\%),\s?(\d{1,3}\%)\)/;
+        var match = matchFormat.exec(rgba);
+        if (match !== null) {
+          var r, g, b;
+          let h = match[1]/360;
+          let s = match[2].substr(0,match[2].length-1) / 100;
+          let l = match[3].substr(0,match[3].length-1) / 100;
+
+          if (s == 0) {
+            r = g = b = l; // achromatic
+          } else {
+            function hue2rgb(p, q, t) {
+              if (t < 0) t += 1;
+              if (t > 1) t -= 1;
+              if (t < 1/6) return p + (q - p) * 6 * t;
+              if (t < 1/2) return q;
+              if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+              return p;
+            }
+
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+          }
+
+          this[0] = round(r*255);
+          this[1] = round(g*255);
+          this[2] = round(b*255);
+          return;
+        }
+
+        console.error("Could not parse string as color: " + rgba);
       }
 
       if (rgba.constructor.name == 'Color' || Array.isArray(rgba)) {
@@ -224,6 +383,8 @@ var ColorUtil = {
     //
     difference: function(base, adj) { return Math.abs(base - adj); },
     exclusion: function(base, adj) { return 255 - (((255 - base) * (255 - adj) / 255) + (base * adj / 255)); },
-    subtract: function(base, adj) { return Math.max((base - adj), 0); }
+    subtract: function(base, adj) { return Math.max((base - adj), 0); },
+    //
+    inbetween: function(base, adj) { return (base+adj)/2; }
   }
 };

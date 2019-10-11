@@ -1,52 +1,3 @@
-function time() {
-    return Math.floor((new Date()).getTime()/1000);
-}
-
-function*range(min,max,step){
-  if (!max) {var max = min; var min = 0;} 
-  if (!step) {var step = 1;} 
-  if (step > 0)
-    for(var i=min;i<max;i+=step) 
-      yield i;
-  else if (step < 0)
-    for(var i=max;i<min;i+=step)
-      yield i;
-}
-
-function len(obj) {
-  if (obj.length)
-    return obj.length;
-  else if (obj.size)
-    if (typeof obj.size === 'function')
-      return obj.size();
-    else
-      return obj.size;
-  else if (typeof obj === 'object')
-    return Object.keys(obj).length;
-  else
-    throw "Type " + typeof(obj) + " has no 'len' property.";
-}
-
-function any(iterable) {
-    for (var index = 0; index < iterable.length; ++index) {
-        if (iterable[index]) return true;
-    }
-    return false;
-}
-
-function all(iterable) {
-    for (var index = 0; index < iterable.length; ++index) {
-        if (!iterable[index]) return false;
-    }
-    return true;
-}
-
-function round(n, digits) {
-  if (!digits)
-    return Math.round(n);
-  else
-    return parseFloat(n.toFixed(digits));
-}
 
 String.prototype.title = function() {
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
@@ -66,6 +17,19 @@ String.prototype.encode = function(encoding) {
   return textEncoder.encode(this);
 };
 
+String.prototype.format = function () {
+  var i = 0, args = arguments;
+  return this.replace(/{}/g, function () {
+    return typeof args[i] != 'undefined' ? args[i++] : '';
+  });
+};
+
+Array.prototype.remove = function(element) {
+  const index = this.indexOf(element);
+
+  this.splice(index, 1);
+};
+
 ArrayBuffer.prototype.decode = function(encoding, opts) {
   let textDecoder = new TextDecoder(encoding);
 
@@ -75,14 +39,18 @@ ArrayBuffer.prototype.decode = function(encoding, opts) {
 // Uint8Array.prototype.decode = ArrayBuffer.prototype.decode;
 // Uint32Array.prototype.decode = ArrayBuffer.prototype.decode;
 
-String.prototype.format = function() {
-
-};
-
 Set.prototype.update = function(arr) {
   for (var item of arr) {
     this.add(item);
   }
+};
+
+Object.items = function(obj) {
+  let arr = [];
+  for (let key in obj) {
+    arr.push([key, obj[key]]);
+  }
+  return arr;
 };
 
 function str(val) {
@@ -170,10 +138,111 @@ function defaultdict(deftype, isFunc) {
   });
 }
 
-function choice(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+var random = new (class{
+  choice(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  choices(arr, N) {
+    if (typeof arr == 'string') {
+      let out = "";
+
+      for (let i = 0; i < N; i++)
+        out += this.choice(arr);
+
+      return out;
+    } else if (Array.isArray(arr)) {
+      let out = [];
+
+      for (let i = 0; i < N; i++)
+        out.push(this.choice(arr));
+
+      return out;
+    } else if (typeof arr == 'object') {
+      let newArr = Object.keys(newArr);
+      let out = [];
+
+      for (let i = 0; i < N; i++)
+        out.push(this.choice(newArr));
+
+      return out;
+    }
+  }
+
+  shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+})();
+
+function sum(...arr) {
+  if (len(arr) == 0)
+    return 0;
+
+  if (len(arr) == 1 && Array.isArray(arr[0]))
+    arr = arr[0];
+
+  return arr.reduce(function (a, b) { return a + b; }, 0);
 }
 
 function print(str) {
   console.log(str);
+}
+function time() {
+    return Math.floor((new Date()).getTime()/1000);
+}
+
+function*range(min,max,step){
+  if (!max) {var max = min; var min = 0;} 
+  if (!step) {var step = 1;} 
+  if (step > 0)
+    for(var i=min;i<max;i+=step) 
+      yield i;
+  else if (step < 0)
+    for(var i=max;i<min;i+=step)
+      yield i;
+}
+
+function*enumerate(arr){
+  for (var i in arr)
+    yield [i, arr[i]];
+}
+
+function len(obj) {
+  if (obj.length)
+    return obj.length;
+  else if (obj.size)
+    if (typeof obj.size === 'function')
+      return obj.size();
+    else
+      return obj.size;
+  else if (typeof obj === 'object')
+    return Object.keys(obj).length;
+  else
+    throw "Type " + typeof(obj) + " has no 'len' property.";
+}
+
+function any(iterable) {
+    for (var index = 0; index < iterable.length; ++index) {
+        if (iterable[index]) return true;
+    }
+    return false;
+}
+
+function all(iterable) {
+    for (var index = 0; index < iterable.length; ++index) {
+        if (!iterable[index]) return false;
+    }
+    return true;
+}
+
+function round(n, digits) {
+  if (!digits)
+    return Math.round(n);
+  else
+    return parseFloat(n.toFixed(digits));
 }

@@ -6,14 +6,14 @@
 <body>
   <div id="test"></div>
 
-  <script type="text/javascript" src="src/wasm.js"></script>
+  <script type="text/javascript" src="src/pythonic.js"></script>
+  <script type="text/javascript" src="src/colors.js"></script>
   <script type="text/javascript">
 
-    let wapp = load_wasm('hello.wasm');
+    let c = new Color(186, 218, 85);
 
-    let result = wapp.add_two_numbers(72, -30);
-
-    $('#test').innerHTML = str(result);
+    console.log(c.hsl());
+    console.log(c.complement().hsl());
   </script>
 </body>
 </html>
