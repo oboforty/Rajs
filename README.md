@@ -1,7 +1,10 @@
-# ![alt rajs](https://github.com/oboforty/Rajs/blob/master/logo.png "Ra.js") Ra.js
+<p align="center">
+  <img src="https://github.com/oboforty/Rajs/blob/master/logo.png">
+</p>
 
-A collection of various useful javascript modules for everyday web development.
-Version 2.0
+# Ra.js - v2
+An all-in-one javascript library. A collection of various useful javascript modules for everyday web development.
+
 
 ## Documentation:
 
@@ -56,3 +59,24 @@ Math.log                    //-> now has a second parameter for log base
 Math.rad2deg, Math.deg2rad  //-> constants
 random                      // random stuff!
 ```
+
+## Meta
+### Ra.js todos:
+- money and number formatting
+- wasm wrapper
+- worker wrapper
+- polyfill
+- seeded random
+- *sniffs* **WE NEED MORE PYTHON**
+
+### Functionalities that ra.js will never cover by philosophy:
+Despite the fact that I believe that frontend developers should avoid npm hell, I think these functionalities are more serious and can be handled way better by more mature libraries/frameworks:
+
+- **dom or general framework :** vue, angular, react
+- **date/time handling :** moment
+- **full random functionality :** 
+- **cryptography :** webcrypto
+- **i18n :** i18n.js
+- **audio and video :** buzz.js, howler, jsplayer, many more
+- **fingerprint and browser detection :** fingerprint2.js, browser.js
+- **code highlighting / editors :** codemirror
