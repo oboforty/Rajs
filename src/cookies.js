@@ -14,7 +14,7 @@ const Cookies = (function() {
         ckc += "; expires=" + date.toUTCString();
       } else if (hours) {
         // hours is a flag to be "persistent" cookie
-        date.setFullYear(expiration_date.getFullYear() + 1);
+        date.setFullYear(date.getFullYear() + 1);
         ckc += "; expires=" + date.toUTCString();
       }
 
@@ -35,11 +35,17 @@ const Cookies = (function() {
   }, {
 
     get: function(target, name) {
+      if (name == 'get')
+        return target.get;
+      else if (name == 'set')
+        return target.set;
       return target.get(name);
     },
 
     set: function(target, name, val) {
-      return target.set(name, val, Boolean(target.persistent));
+      target.set(name, val, Boolean(target.persistent));
+
+      return true;
     },
 
     has: function(target, name) {

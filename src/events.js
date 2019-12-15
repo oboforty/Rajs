@@ -1,44 +1,46 @@
 var Events = {
-  events: {},
-  callbacks: {},
+  events: defaultdict(list, true),
+  events_once: defaultdict(list, true),
+  events_fired: defaultdict(()=>false, true),
 
   // Observer pattern
   on: function(eventName, callback) {
-    if (!this.events[eventName])
-      this.events[eventName] = [];
     this.events[eventName].push(callback);
   },
 
   // Single-time event
   once: function(eventName, callback) {
-    if (!this.callbacks[eventName])
-      this.callbacks[eventName] = [];
-    this.callbacks[eventName].push(callback);
+    this.events_once[eventName].push(callback);
+  },
+
+  // Single-time event, triggered by past events
+  past: function(eventName, callback) {
+    if (this.events_fired[eventName])
+      callback();
+    else
+      return this.once(eventName, callback);
   },
 
   // Remove all subscribers
-  off: function(eventName) {
-    if (this.events[eventName])
-      this.events[eventName] = [];
-
-    if (this.callbacks[eventName])
-      this.callbacks[eventName] = [];
+  clear: function(eventName) {
+    this.events[eventName] = [];
+    this.events_once[eventName] = [];
   },
 
   // Start event propagation (for both kinds)
   fire: function(eventName, args, context) {
     // events
-    if (!this.events[eventName])
-      this.events[eventName] = [];
     for (var event of this.events[eventName])
       event.apply(context, args);
 
-    // single time callbacks
-    if (!this.callbacks[eventName])
-      this.callbacks[eventName] = [];
-    for (var event of this.callbacks[eventName])
+    // single time events_once
+    for (var event of this.events_once[eventName])
       event.apply(context, args);
-    // remove all fired callbacks:
-    this.callbacks[eventName] = [];
+
+    // remove all fired events_once:
+    this.events_once[eventName] = [];
+
+    // flag
+    this.events_fired[eventName] = true;
   }
 };

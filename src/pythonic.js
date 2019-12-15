@@ -197,8 +197,8 @@ function time() {
 }
 
 function*range(min,max,step){
-  if (!max) {var max = min; var min = 0;} 
-  if (!step) {var step = 1;} 
+  if (max==null) {var max = min; var min = 0;} 
+  if (step==null) {var step = 1;} 
   if (step > 0)
     for(var i=min;i<max;i+=step) 
       yield i;

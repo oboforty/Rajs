@@ -18,4 +18,4 @@ const Import = {
 
     $('head')[0].appendChild(script);
   }
-}
+};

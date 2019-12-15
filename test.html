@@ -6,14 +6,19 @@
 <body>
   <div id="test"></div>
 
-  <script type="text/javascript" src="src/pythonic.js"></script>
-  <script type="text/javascript" src="src/colors.js"></script>
+  <script type="text/javascript" src="src/jquery_is_a_sin.js"></script>
+  <script type="text/javascript" src="src/cookies.js"></script>
   <script type="text/javascript">
 
-    let c = new Color(186, 218, 85);
-
-    console.log(c.hsl());
-    console.log(c.complement().hsl());
+    window.onload = () => {
+      Cookies.set("name", "value");
+       // if (Cookies["test"]) {
+       //   $("#test").innerHTML = "found!";
+       // } else {
+       //   Cookies["test"] = "set";
+       //   $("#test").innerHTML = "cookie not found";
+       // }
+    };
   </script>
 </body>
 </html>
