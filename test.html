@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <title>Ra.js TEST</title>
 </head>
 <body>
-  <div id="test"></div>
+<div id="test"></div>
 
-  <script type="text/javascript" src="src/jquery_is_a_sin.js"></script>
-  <script type="text/javascript" src="src/cookies.js"></script>
-  <script type="text/javascript">
+<script type="text/javascript" src="src/pythonic.js"></script>
+<script type="text/javascript" src="src/math.js"></script>
+<script type="text/javascript">
 
-    window.onload = () => {
-      Cookies.set("name", "value");
-       // if (Cookies["test"]) {
-       //   $("#test").innerHTML = "found!";
-       // } else {
-       //   Cookies["test"] = "set";
-       //   $("#test").innerHTML = "cookie not found";
-       // }
-    };
-  </script>
+const ret = matrix([
+  [  1.0 , 0.5 ],
+  [ -0.5 , 1.0]
+]).mul( cvector([ 2.0, 1.0 ]) );
+
+console.log(ret);
+
+</script>
 </body>
 </html>

@@ -116,11 +116,14 @@ var Color = function (rgba) {
     return `hsv(${round(h*360)},${round(s*100)}%,${round(l*100)}%)`;
   };
 
-  this.yuv = function() {
-    var y = [0,0,0];
-    if (this[3])
-      y.push(this[3]);
+  this.to_yuv = function() {
+    console.log(this.to_array(), cvector( this.to_array() ));
 
+    return matrix([
+      [  0.299   ,  0.587   , 0.114   ],
+      [ -1.14713 , -0.28886 , 0.436   ],
+      [  0.615   , -0.51499 , 0.10001 ]
+    ]).mul( cvector( this.to_array() ) );
   };
 
   this.to_hsl = function() {
@@ -187,6 +190,15 @@ var Color = function (rgba) {
     cc[2] = this[2];
     cc[3] = this[3];
     return cc;
+  };
+
+  this.to_array = function() {
+    let arr = [this[0], this[1], this[2]];
+
+    if (this[3])
+      arr.push(this[3]);
+
+    return arr;
   };
 
   (function(rgba) {
@@ -325,15 +337,14 @@ function clamp(n){
   return n;
 }
 
-function yuv(y) {
-  var col = new Color([0,0,0]);
-  if (y[3])
-    col[3] = y[3];
+function from_yuv(y,u,v) {
+  const ca = matrix([
+    [ 1.0  ,  0.0     ,  1.13983 ],
+    [ 1.0  , -0.39465 , -0.58060 ],
+    [ 1.0  ,  2.03211 ,  0.0     ]
+  ]).mul(cvector([y,u,v])).transpose().to_array()[0];
 
-  col[0] = clamp(Math.floor(y[0]+1.4075*y[2]));
-  col[1] = clamp(Math.floor(y[0]-0.3455*y[1]-(0.7169*y[2])));
-  col[2] = clamp(Math.floor(y[0]+1.7790*y[1]));
-  return col;
+  return new Color(ca.map(round).map(clamp));
 }
 
 var ColorUtil = {

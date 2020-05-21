@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ra.js demo</title>
+  <style type="text/css">
+    pre {
+      color: #baffda;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+<h1>Ra.js javascript swiss knife library</h1>
+
+<p>Ra.js is a one for all js library that aims to avoid npm dependency hell for browser javascript.</p>
+
+<img src='bg.png' />
+<script type="text/javascript" src="ra.min.js"></script>
+
+<h2>Browser utilities</h2>
+
+<h3>jQuery is a piece of shit but I love the $</h3>
+<pre><code>
+const elem1 = $("#test");
+
+const elem2 = $(".test")[0];
+
+</code></pre>
+
+
+<h3>Cookies</h3>
+<p>Ra.js provides a simple interface to access cookies on the frontend side. Refresh this page and check the value of the box:</p>
+
+<div id="box_cookies" style="background: #bada55; display: block; height: 35px; max-width: 150px"></div>
+
+<p>Code:</p>
+
+<pre><code id="disp_cookies"></code></pre>
+
+<p>Alternatively:</p>
+<pre><code>
+Cookies.set("name", "value");
+
+Cookies.get("name", "default_value");
+
+</code></pre>
+
+<script id="code_cookies" type="text/javascript">
+if (!Cookies["test"]) {
+  Cookies["test"] = "oboforty";
+
+  $("#box_cookies").innerHTML = "-";
+} else {
+  $("#box_cookies").innerHTML = "Welcome, " + Cookies["test"];
+}
+
+</script>
+
+
+</hr>
+
+<h3>Math</h3>
+<script type="text/javascript">
+let M1 = matrix([
+   [  1.0 , 0.5,  2  ],
+   [ -0.5 , 1.0, -0.9]
+]);
+
+M1.map((i,j,v)=>v*2);
+
+let M2 = M1.transpose();
+
+
+console.log("M1:", M1);
+console.log("transposed:", M2);
+
+
+let ret = matrix([
+  [  1.0 , 0.5 ],
+  [ -0.5 , 1.0]
+]).mul( cvector([ 2.0, 1.0 ]) );
+
+console.log(ret);
+</script>
+
+</hr>
+
+<h3>Color </h3>
+<p>Ra.js provides a <strong>Color</strong> class that has a lot of tricks!</p>
+
+<canvas id="canvas_tri" width="600" height="320"></canvas>
+
+<pre><code id="disp_tri"></code></pre>
+
+<script id="code_tri" type="text/javascript">
+const canvas = $("#canvas_tri"), ctx = canvas.getContext('2d');
+const H = canvas.height, W = canvas.width;
+
+// triangle side length:
+const TS = 40;
+// height scale:
+const Sc = 0.5;
+// rows and columns:
+let n_cols = Math.ceil(W / TS) + 1;
+let n_rows = Math.ceil(H / TS);
+
+// yuv shading:
+const Umax = 0.436, Vmax = 0.615;
+let yuv_y = 127, dir = 1;
+
+const BGBASE = new Color("#000000");
+
+
+function get_color(y,u,v, i,j,k) {
+  let RND = new random.SeededRandom((97*i+1) * (17*j+1) * k);
+  
+  return from_yuv(y,u,v).interpolate(BGBASE, RND.uniform(0.0, 0.3));
+}
+
+
+ranimate((timestamp, dt, elapsed_time) => {
+  ctx.lineWidth = 1;
+  let clr;
+
+  yuv_y += dir*dt*0.05;
+
+  if (yuv_y >= 255 && dir == 1)
+    dir = -1;
+  else if (yuv_y <= 0 && dir == -1)
+    dir = 1;
+
+  for (let i of range(n_rows+1)) {
+    const y = i * TS - TS/2;
+    const yuv_u = (i/n_rows-0.5)*2*Umax*255;
+
+    for (let j of range(n_cols+1)) {
+      let x = j * TS - TS/2;
+      const yuv_v = (j/n_cols-0.5)*2*Vmax*255;
+
+      if (i % 2 != 0) {
+        x -= TS/2;
+      }
+
+      // TODO: itt: negative YUV?? wtF? make some tests
+      // then TODO: rgb is a property!--------------------------------------------
+
+      // upward pointing triangle
+      clr = get_color(yuv_y, yuv_u, yuv_v, i,j,1).rgb();
+      ctx.fillStyle = clr;
+      ctx.strokeStyle = clr;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + TS/2, y + TS);
+      ctx.lineTo(x - TS/2, y + TS);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // downward pointing triangle
+      clr = get_color(yuv_y, yuv_u, yuv_v, i,j,2).rgb();
+      ctx.fillStyle = clr;
+      ctx.strokeStyle = clr;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + TS, y);
+      ctx.lineTo(x + TS/2, y + TS);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
+  return true;
+});
+
+</script>
+
+
+
+<script type="text/javascript">
+  $("#disp_cookies").innerHTML = $("#code_cookies").innerHTML;
+  $("#disp_tri").innerHTML = $("#code_tri").innerHTML;
+</script>
+</body>
+</html>

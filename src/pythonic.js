@@ -138,57 +138,6 @@ function defaultdict(deftype, isFunc) {
   });
 }
 
-var random = new (class{
-  choice(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
-
-  choices(arr, N) {
-    if (typeof arr == 'string') {
-      let out = "";
-
-      for (let i = 0; i < N; i++)
-        out += this.choice(arr);
-
-      return out;
-    } else if (Array.isArray(arr)) {
-      let out = [];
-
-      for (let i = 0; i < N; i++)
-        out.push(this.choice(arr));
-
-      return out;
-    } else if (typeof arr == 'object') {
-      let newArr = Object.keys(newArr);
-      let out = [];
-
-      for (let i = 0; i < N; i++)
-        out.push(this.choice(newArr));
-
-      return out;
-    }
-  }
-
-  shuffle(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
-})();
-
-function sum(...arr) {
-  if (len(arr) == 0)
-    return 0;
-
-  if (len(arr) == 1 && Array.isArray(arr[0]))
-    arr = arr[0];
-
-  return arr.reduce(function (a, b) { return a + b; }, 0);
-}
-
 function print(str) {
   console.log(str);
 }
