@@ -111,10 +111,13 @@ let yuv_y = 127, dir = 1;
 const BGBASE = new Color("#000000");
 
 
-function get_color(y,u,v, i,j,k) {
+function get_color(i,j,k) {
+  const u = (i/n_rows-0.5)*2*Umax*255;
+  const v = (j/n_cols-0.5)*2*Vmax*255;
+
   let RND = new random.SeededRandom((97*i+1) * (17*j+1) * k);
   
-  return from_yuv(y,u,v).interpolate(BGBASE, RND.uniform(0.0, 0.3));
+  return from_yuv(yuv_y,u,v).interpolate(BGBASE, RND.uniform(0.0, 0.3));
 }
 
 
@@ -122,7 +125,7 @@ ranimate((timestamp, dt, elapsed_time) => {
   ctx.lineWidth = 1;
   let clr;
 
-  yuv_y += dir*dt*0.05;
+  yuv_y += dir*dt*0.02;
 
   if (yuv_y >= 255 && dir == 1)
     dir = -1;
@@ -131,11 +134,9 @@ ranimate((timestamp, dt, elapsed_time) => {
 
   for (let i of range(n_rows+1)) {
     const y = i * TS - TS/2;
-    const yuv_u = (i/n_rows-0.5)*2*Umax*255;
 
     for (let j of range(n_cols+1)) {
       let x = j * TS - TS/2;
-      const yuv_v = (j/n_cols-0.5)*2*Vmax*255;
 
       if (i % 2 != 0) {
         x -= TS/2;
@@ -145,7 +146,7 @@ ranimate((timestamp, dt, elapsed_time) => {
       // then TODO: rgb is a property!--------------------------------------------
 
       // upward pointing triangle
-      clr = get_color(yuv_y, yuv_u, yuv_v, i,j,1).rgb();
+      clr = get_color(i,j,1).rgb();
       ctx.fillStyle = clr;
       ctx.strokeStyle = clr;
       ctx.beginPath();
@@ -157,7 +158,7 @@ ranimate((timestamp, dt, elapsed_time) => {
       ctx.stroke();
 
       // downward pointing triangle
-      clr = get_color(yuv_y, yuv_u, yuv_v, i,j,2).rgb();
+      clr = get_color(i,j,2).rgb();
       ctx.fillStyle = clr;
       ctx.strokeStyle = clr;
       ctx.beginPath();
