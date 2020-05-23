@@ -1,58 +1,107 @@
 
-var Color = function (rgba) {
+class Color {
 
-  this.add = function(col) {
+  get r() {
+    return this.c[0];
+  }
+
+  set r(v) {
+    this.c[0] = v;
+  }
+
+  get g() {
+    return this.c[1];
+  }
+
+  set g(v) {
+    this.c[1] = v;
+  }
+
+  get b() {
+    return this.c[2];
+  }
+
+  set b(v) {
+    this.c[2] = v;
+  }
+
+  get a() {
+    return this.c[3]||1;
+  }
+
+  set a(v) {
+    this.c[3] = v;
+  }
+
+  clone() {
+    var cc = new Color(Boolean(this.c[3]));
+    cc[0] = this.c[0];
+    cc[1] = this.c[1];
+    cc[2] = this.c[2];
+    cc[3] = this.c[3];
+    return cc;
+  }
+
+  withalpha(transparency) {
+    var c = this.clone();
+    c.a = transparency;
+
+    return c;
+  }
+
+  add(col) {
     var col0 = new Color(true);
-    col0[0] = clamp(this[0] + col[0]);
-    col0[1] = clamp(this[1] + col[1]);
-    col0[2] = clamp(this[2] + col[2]);
-    col0[3] = clamp((this[3]||1) + (col[3]||1));
-  };
+    col0[0] = clamp(this.c[0] + col.c[0]);
+    col0[1] = clamp(this.c[1] + col.c[1]);
+    col0[2] = clamp(this.c[2] + col.c[2]);
+    col0[3] = clamp((this.c[3]||1) + (col.c[3]||1));
+  }
   
-  this.sub = function(col) {
+  sub(col) {
     var col0 = new Color(true);
-    col0[0] = clamp(this[0] - col[0]);
-    col0[1] = clamp(this[1] - col[1]);
-    col0[2] = clamp(this[2] - col[2]);
-    col0[3] = clamp((this[3]||1) - (col[3]||1));
-  };
+    col0[0] = clamp(this.c[0] - col.c[0]);
+    col0[1] = clamp(this.c[1] - col.c[1]);
+    col0[2] = clamp(this.c[2] - col.c[2]);
+    col0[3] = clamp((this.c[3]||1) - (col.c[3]||1));
+  }
 
-  this.blend = function(col, algorithm) {
+  blend(col, algorithm) {
     var col0 = new Color();
     var al = ColorUtil.blendmodes[algorithm];
-    col0[0] = clamp(Math.round(al(this[0], col[0])));
-    col0[1] = clamp(Math.round(al(this[1], col[1])));
-    col0[2] = clamp(Math.round(al(this[2], col[2])));
+
+    col0[0] = clamp(Math.round(al(this.c[0], col.c[0])));
+    col0[1] = clamp(Math.round(al(this.c[1], col.c[1])));
+    col0[2] = clamp(Math.round(al(this.c[2], col.c[2])));
 
     return col0;
-  };
+  }
 
-  this.interpolate = function(col, p) {
+  interpolate(col, p) {
     let cc = [];
 
     for (let i of range(3)) {
-      let A = this[i], B = col[i];
+      let A = this.c[i], B = col.c[i];
 
       let rng = B-A, min = Math.min(A,B);
       cc[i] = Math.round(rng<0 ? (-rng*(1-p)) : rng*p + min);
     }
 
     return new Color(cc);
-  };
+  }
   
-  this.cmp = function(col) {
-    var r = 255 - Math.abs(this[0] - col[0]);
-    var g = 255 - Math.abs(this[1] - col[1]);
-    var b = 255 - Math.abs(this[2] - col[2]);
+  cmp(col) {
+    var r = 255 - Math.abs(this.c[0] - col.c[0]);
+    var g = 255 - Math.abs(this.c[1] - col.c[1]);
+    var b = 255 - Math.abs(this.c[2] - col.c[2]);
 
     r /= 255;
     g /= 255;
     b /= 255;
 
     return (r + g + b) / 3;
-  };
+  }
 
-  this.shade = function(lum) {
+  shade(lum) {
     var hex = String(this.hex()).replace(/[^0-9a-f]/gi, '');
     if (hex.length < 6) {
       hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
@@ -67,13 +116,13 @@ var Color = function (rgba) {
     }
 
     return new Color(newHex);
-  };
+  }
   
-  this.contrast = function() {
+  get contrast() {
     return (this.yiq() >= 128) ? 'black' : 'white';
-  };
+  }
 
-  this.complement = function() {
+  get complement() {
     let [h,s,l] = this.to_hsl();
     
     h *= 360;
@@ -81,52 +130,53 @@ var Color = function (rgba) {
     h = h % 360;
 
     return new Color(`hsl(${round(h)},${round(s*100)}%,${round(l*100)}%)`);
-  };
+  }
 
-  this.a = function(transparency) {
-    var c = this.clone();
-    c[3] = transparency;
-    return c;
-  };
-  
-  this.yiq = function() {
-    return ((this[0] * 299) + (this[1] * 587) + (this[2] * 114)) / 1000;
-  };
+  get yiq() {
+    return ((this.c[0] * 299) + (this.c[1] * 587) + (this.c[2] * 114)) / 1000;
+  }
 
-  this.rgba = function() {
-    if (typeof this[3] !== 'undefined')
-      return 'rgba('+this[0]+','+this[1]+','+this[2]+','+this[3]+')';
-    else
-      return 'rgb('+this[0]+','+this[1]+','+this[2]+')';
-  };
+  get rgba() {
+    return 'rgba('+this.c[0]+','+this.c[1]+','+this.c[2]+','+(this.c[3]||1)+')';
+  }
 
-  this.rgb = function() {
-    return 'rgb('+this[0]+','+this[1]+','+this[2]+')';
-  };
+  get rgb() {
+    return 'rgb('+this.c[0]+','+this.c[1]+','+this.c[2]+')';
+  }
 
-  this.hsl = function() {
+  get hsl() {
     let [h,s,l] = this.to_hsl();
 
     return `hsl(${round(h*360)},${round(s*100)}%,${round(l*100)}%)`;
-  };
+  }
 
-  this.hsv = function() {
+  get hsv() {
     let [h,s,v] = this.to_hsv();
 
     return `hsv(${round(h*360)},${round(s*100)}%,${round(l*100)}%)`;
-  };
+  }
 
-  this.to_yuv = function() {
-    console.log(this.to_array(), cvector( this.to_array() ));
+  get hex() {
+    var r = this.c[0].toString(16);
+    var g = this.c[1].toString(16);
+    var b = this.c[2].toString(16);
+    return "#" + (r.length == 1 ? "0" + r : r)+(g.length == 1 ? "0" + g : g)+(b.length == 1 ? "0" + b : b);
+  }
 
-    return matrix([
-      [  0.299   ,  0.587   , 0.114   ],
-      [ -1.14713 , -0.28886 , 0.436   ],
-      [  0.615   , -0.51499 , 0.10001 ]
-    ]).mul( cvector( this.to_array() ) );
-  };
+  to_array(cs) {
+    let arr = null;
 
-  this.to_hsl = function() {
+    switch(cs) {
+      case null: case 'rgb': case 'rgba': return this.c.splice(0); break;
+      case 'hsv': return this.to_hsv(); break;
+      case 'hsl': return this.to_hsl(); break;
+      case 'yuv': return this.to_yuv(); break;
+    }
+
+    return arr;
+  }
+
+  to_hsl() {
     let [r,g,b] = this;
     r /= 255, g /= 255, b /= 255;
 
@@ -149,9 +199,9 @@ var Color = function (rgba) {
     }
 
     return [ h, s, l ];
-  };
+  }
 
-  this.to_hsv = function() {
+  to_hsv() {
     let [r,g,b] = this;
     r /= 255, g /= 255, b /= 255;
 
@@ -174,162 +224,44 @@ var Color = function (rgba) {
     }
 
     return [ h, s, v ];
-  };
+  }
 
-  this.hex = function() {
-    var r = this[0].toString(16);
-    var g = this[1].toString(16);
-    var b = this[2].toString(16);
-    return "#" + (r.length == 1 ? "0" + r : r)+(g.length == 1 ? "0" + g : g)+(b.length == 1 ? "0" + b : b);
-  };
+  to_yuv() {
+    return matrix([
+      [  0.299   ,  0.587   , 0.114   ],
+      [ -1.14713 , -0.28886 , 0.436   ],
+      [  0.615   , -0.51499 , 0.10001 ]
+    ]).mul( cvector( this.c ) );
+  }
 
-  this.clone = function() {
-    var cc = new Color(Boolean(this[3]));
-    cc[0] = this[0];
-    cc[1] = this[1];
-    cc[2] = this[2];
-    cc[3] = this[3];
-    return cc;
-  };
+  constructor(...rgba) {
+    if (len(rgba) == 1)
+      var rgba = rgba[0];
+    else if (len(rgba) == 0)
+      var rgba = [0,0,0,0];
 
-  this.to_array = function() {
-    let arr = [this[0], this[1], this[2]];
+    const t = typeof rgba;
 
-    if (this[3])
-      arr.push(this[3]);
+    if (Array.isArray(rgba))
+      this.c = rgba;
+    else if (t === 'object')
+      this.c = [rgba.r, rgba.g, rgba.b, rgba.a||1];
+    else if (t === 'string') {
+      let [cs, col] = ColorUtil.cs_parse(rgba.toLowerCase());
 
-    return arr;
-  };
-
-  (function(rgba) {
-    this.push(0);
-    this.push(0);
-    this.push(0);
-
-      if (typeof rgba === 'undefined')
-        return;
-      if (typeof rgba == 'string') {
-        rgba = rgba.toLowerCase();
-
-        var matchFormat = /rgb\((\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})\)/;
-        var match = matchFormat.exec(rgba);
-        if (match !== null) {
-          this[0] = match[1];
-          this[1] = match[2];
-          this[2] = match[3];
-          return;
-        }
-
-        var matchFormat = /rgba\((\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})\)/;
-        var match = matchFormat.exec(rgba);
-        if (match !== null) {
-          this[0] = match[1];
-          this[1] = match[2];
-          this[2] = match[3];
-          this[3] = match[4];
-          return;
-        }
-
-        var matchFormat = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
-        var match = matchFormat.exec(rgba);
-        if (match !== null) {
-          this[0] = parseInt(match[1], 16);
-          this[1] = parseInt(match[2], 16);
-          this[2] = parseInt(match[3], 16);
-          return;
-        }
-
-        var matchFormat = /hsv\((\d{1,3}),\s?(\d{1,3}\%),\s?(\d{1,3}\%)\)/;
-        var match = matchFormat.exec(rgba);
-        if (match !== null) {
-          var r, g, b;
-          let h = match[1]/360;
-          let s = match[2].substr(0,match[2].length-1) / 100;
-          let v = match[3].substr(0,match[3].length-1) / 100;
-
-          var i = Math.floor(h * 6);
-          var f = h * 6 - i;
-          var p = v * (1 - s);
-          var q = v * (1 - f * s);
-          var t = v * (1 - (1 - f) * s);
-
-          switch (i % 6) {
-            case 0: r = v, g = t, b = p; break;
-            case 1: r = q, g = v, b = p; break;
-            case 2: r = p, g = v, b = t; break;
-            case 3: r = p, g = q, b = v; break;
-            case 4: r = t, g = p, b = v; break;
-            case 5: r = v, g = p, b = q; break;
-          }
-
-          this[0] = round(r*255);
-          this[1] = round(g*255);
-          this[2] = round(b*255);
-          return;
-        }
-
-        var matchFormat = /hsl\((\d{1,3}),\s?(\d{1,3}\%),\s?(\d{1,3}\%)\)/;
-        var match = matchFormat.exec(rgba);
-        if (match !== null) {
-          var r, g, b;
-          let h = match[1]/360;
-          let s = match[2].substr(0,match[2].length-1) / 100;
-          let l = match[3].substr(0,match[3].length-1) / 100;
-
-          if (s == 0) {
-            r = g = b = l; // achromatic
-          } else {
-            function hue2rgb(p, q, t) {
-              if (t < 0) t += 1;
-              if (t > 1) t -= 1;
-              if (t < 1/6) return p + (q - p) * 6 * t;
-              if (t < 1/2) return q;
-              if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-              return p;
-            }
-
-            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            var p = 2 * l - q;
-
-            r = hue2rgb(p, q, h + 1/3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1/3);
-          }
-
-          this[0] = round(r*255);
-          this[1] = round(g*255);
-          this[2] = round(b*255);
-          return;
-        }
-
+      if (cs == null)
         console.error("Could not parse string as color: " + rgba);
-      }
-
-      if (rgba.constructor.name == 'Color' || Array.isArray(rgba)) {
-        this[0] = rgba[0];
-        this[1] = rgba[1];
-        this[2] = rgba[2];
-      } else if (typeof rgba === 'boolean') {
-        if (rgba === true)
-         this.push(0);
-      } else if (typeof rgba === 'number') {
-        var num = rgba*2654435761 % Math.pow(2, 32);
-        num >>>= 0;
-        if (!this[3]) this.push(0);
-        this[2] = num & 0xFF;
-        this[1] = (num & 0xFF00) >>> 8;
-        this[0] = (num & 0xFF0000) >>> 16;
-        this[3] = ( (num & 0xFF000000) >>> 24 ) / 255;
-      } else if (typeof rgba === 'object') {
-        if (rgba.r) this[0] = rgba.r;
-        if (rgba.g) this[1] = rgba.g;
-        if (rgba.b) this[2] = rgba.b;
-        if (rgba.a) this.push(rgba.a);
-      }
-  }).bind(this)(arguments.length > 1 ? list(arguments) : rgba);
-};
-
-Color.prototype = Array.prototype;
+    } else if (t === 'number') {
+      var num = rgba*2654435761 % Math.pow(2, 32);
+      num >>>= 0;
+      if (!this.c[3]) this.push(0);
+      this.c[2] = num & 0xFF;
+      this.c[1] = (num & 0xFF00) >>> 8;
+      this.c[0] = (num & 0xFF0000) >>> 16;
+      this.c[3] = ( (num & 0xFF000000) >>> 24 ) / 255;
+    }
+  }
+}
 
 function clamp(n){
   if(n<0){return(0);}
@@ -397,5 +329,102 @@ var ColorUtil = {
     subtract: function(base, adj) { return Math.max((base - adj), 0); },
     //
     inbetween: function(base, adj) { return (base+adj)/2; }
+  },
+
+  cs_parse: function(rgba) {
+    let c = [];
+
+    var matchFormat = /rgb\((\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})\)/;
+    var match = matchFormat.exec(rgba);
+    if (match !== null) {
+      c[0] = match[1];
+      c[1] = match[2];
+      c[2] = match[3];
+      return ['rgb', c];
+    }
+
+    var matchFormat = /rgba\((\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})\)/;
+    var match = matchFormat.exec(rgba);
+    if (match !== null) {
+      c[0] = match[1];
+      c[1] = match[2];
+      c[2] = match[3];
+      c[3] = match[4];
+      return ['rgba', c];
+    }
+
+    var matchFormat = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+    var match = matchFormat.exec(rgba);
+    if (match !== null) {
+      c[0] = parseInt(match[1], 16);
+      c[1] = parseInt(match[2], 16);
+      c[2] = parseInt(match[3], 16);
+      return ['hex', c];
+    }
+
+    var matchFormat = /hsv\((\d{1,3}),\s?(\d{1,3}\%),\s?(\d{1,3}\%)\)/;
+    var match = matchFormat.exec(rgba);
+    if (match !== null) {
+      var r, g, b;
+      let h = match[1]/360;
+      let s = match[2].substr(0,match[2].length-1) / 100;
+      let v = match[3].substr(0,match[3].length-1) / 100;
+
+      var i = Math.floor(h * 6);
+      var f = h * 6 - i;
+      var p = v * (1 - s);
+      var q = v * (1 - f * s);
+      var t = v * (1 - (1 - f) * s);
+
+      switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+      }
+
+      c[0] = round(r*255);
+      c[1] = round(g*255);
+      c[2] = round(b*255);
+      return ['hsv', c];
+    }
+
+    var matchFormat = /hsl\((\d{1,3}),\s?(\d{1,3}\%),\s?(\d{1,3}\%)\)/;
+    var match = matchFormat.exec(rgba);
+    if (match !== null) {
+      var r, g, b;
+      let h = match[1]/360;
+      let s = match[2].substr(0,match[2].length-1) / 100;
+      let l = match[3].substr(0,match[3].length-1) / 100;
+
+      if (s == 0) {
+        r = g = b = l; // achromatic
+      } else {
+        function hue2rgb(p, q, t) {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1/6) return p + (q - p) * 6 * t;
+          if (t < 1/2) return q;
+          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+
+      c[0] = round(r*255);
+      c[1] = round(g*255);
+      c[2] = round(b*255);
+      return ['hsl', c];
+    }
+
+    return [null, null];
   }
 };
