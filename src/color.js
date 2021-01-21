@@ -251,6 +251,8 @@ class Color {
 
       if (cs == null)
         console.error("Could not parse string as color: " + rgba);
+
+      this.c = col;
     } else if (t === 'number') {
       var num = rgba*2654435761 % Math.pow(2, 32);
       num >>>= 0;

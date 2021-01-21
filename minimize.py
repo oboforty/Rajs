@@ -3,7 +3,9 @@ from jsmin import jsmin
 from os import listdir
 from os.path import isfile, join
 
-copy = "// Rajs.min.js, a small library for everything. check out https://github.com/oboforty/Rajs \n\n"
+VERSION = '2.0.8'
+
+copy = f"// Rajs.min.js v{VERSION}, a small library for everything. check out https://github.com/oboforty/Rajs \n\n"
 content = ""
 for f in listdir("src/"):
 	filename = "src/" + f

@@ -195,3 +195,15 @@ function round(n, digits) {
   else
     return parseFloat(n.toFixed(digits));
 }
+
+function Enum(...args) {
+  let obj = {};
+  let i = 0;
+
+  for(let e of args) {
+    obj[e] = i++;
+  }
+
+  const en = Object.freeze(obj);
+  return en;
+}

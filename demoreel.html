@@ -146,7 +146,7 @@ ranimate((timestamp, dt, elapsed_time) => {
       // then TODO: rgb is a property!--------------------------------------------
 
       // upward pointing triangle
-      clr = get_color(i,j,1).rgb();
+      clr = get_color(i,j,1).rgb;
       ctx.fillStyle = clr;
       ctx.strokeStyle = clr;
       ctx.beginPath();
@@ -158,7 +158,7 @@ ranimate((timestamp, dt, elapsed_time) => {
       ctx.stroke();
 
       // downward pointing triangle
-      clr = get_color(i,j,2).rgb();
+      clr = get_color(i,j,2).rgb;
       ctx.fillStyle = clr;
       ctx.strokeStyle = clr;
       ctx.beginPath();
