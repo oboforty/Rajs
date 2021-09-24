@@ -24,11 +24,11 @@ String.prototype.format = function () {
   });
 };
 
-Array.prototype.remove = function(element) {
-  const index = this.indexOf(element);
+// Array.prototype.remove = function(element) {
+//   const index = this.indexOf(element);
 
-  this.splice(index, 1);
-};
+//   this.splice(index, 1);
+// };
 
 ArrayBuffer.prototype.decode = function(encoding, opts) {
   let textDecoder = new TextDecoder(encoding);
@@ -45,13 +45,13 @@ Set.prototype.update = function(arr) {
   }
 };
 
-Object.items = function(obj) {
-  let arr = [];
-  for (let key in obj) {
-    arr.push([key, obj[key]]);
-  }
-  return arr;
-};
+// Object.items = function(obj) {
+//   let arr = [];
+//   for (let key in obj) {
+//     arr.push([key, obj[key]]);
+//   }
+//   return arr;
+// };
 
 function str(val) {
   if (typeof val === 'undefined')

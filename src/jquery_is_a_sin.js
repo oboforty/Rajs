@@ -11,3 +11,12 @@ function $(sel0) {
     return document.getElementsByTagName(sel0);
   }
 }
+
+const clipboard_copy = str => {
+  const el = document.createElement('textarea');
+  el.value = str;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};

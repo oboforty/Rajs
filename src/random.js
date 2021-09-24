@@ -47,6 +47,21 @@ var random = new (class{
     return a;
   }
 
+  distribution(prob) {
+    prob = Object.fromEntries(
+      Object.entries(prob).sort(([,a],[,b]) => b-a)
+    );
+
+    if (Math.abs(sum(Object.values(prob)) - 1) > 0.0000001)
+      throw "Distribution table probabilities must be equal to 1";
+
+    let i, s=0, r=Math.random();
+    for (i in prob) {
+      s += prob[i];
+      if (r <= s) return i;
+    }
+  }
+
 })();
 
 
