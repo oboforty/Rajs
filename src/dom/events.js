@@ -26,12 +26,6 @@ export class EventContainer {
       return this.once(eventName, callback);
   }
 
-  // Remove all subscribers
-  clear(eventName) {
-    this.events[eventName] = [];
-    this.events_once[eventName] = [];
-  }
-
   // Start event propagation (for both kinds)
   fire(eventName, ...args) {
     // events
@@ -47,5 +41,15 @@ export class EventContainer {
 
     // flag
     this.events_fired[eventName] = true;
+  }
+
+  has(eventName) {
+    return this.events[eventName] || this.events_once[eventName] || this.events_once[eventName];
+  }
+
+  // Remove all subscribers
+  clear(eventName) {
+    this.events[eventName] = [];
+    this.events_once[eventName] = [];
   }
 };

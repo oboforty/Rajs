@@ -6,6 +6,8 @@ export class HttpApi {
 
         if (this.base_url[this.base_url.length-1] != '/')
             this.base_url += '/'
+
+        this.options = (o)=>o;
     }
 
     request_callback(group, data, cb) {
@@ -19,7 +21,7 @@ export class HttpApi {
         return this.request(group, data).then(cb);
     }
 
-    request(group, data) {
+    async request(group, data) {
         // @todo: later: how to rate limit anonymous user?
         //   if (access_token == null)
         //     throw "access_token not provided";
@@ -47,7 +49,8 @@ export class HttpApi {
         if (this.access_token)
             headers['Authorization'] = 'bearer ' + this.access_token;
 
-        return fetch(this.base_url+_url, {
+
+        const resp = await fetch(this.base_url+_url, this.options({
             method: method,
             mode: this.mode||'cors',
             cache: 'no-cache',
@@ -56,11 +59,11 @@ export class HttpApi {
             credentials: 'omit',
             body: method == 'GET' ? undefined : JSON.stringify(data),
             headers: headers
-        }).then((resp)=>{
-            if (resp.status == 200)
-                return resp.json();
-            else 
-                throw resp;
-        });
+        }));
+        
+        if (resp.status == 200)
+            return await resp.json();
+        else 
+            throw resp;
     }
 }

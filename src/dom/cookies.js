@@ -34,7 +34,7 @@ export class CookiesHandler {
     if (parts.length == 2) {
       return parts.pop().split(";").shift();
     } else {
-      return def
+      return null;
     }
   }
 

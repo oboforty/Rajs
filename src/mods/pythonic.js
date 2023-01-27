@@ -39,6 +39,63 @@ export function list(val) {
   return l;
 }
 
+export function type(obj) {
+  if (obj === undefined) return undefined;
+  else if (obj === null) return null;
+
+  return Object.getPrototypeOf(obj).constructor;
+}
+
+export function time() {
+  return window.Math.floor((new Date()).getTime()/1000);
+}
+
+export function*range(min,max,step){
+  if (max==null) {var max = min; var min = 0;} 
+  if (step==null) {var step = 1;} 
+  if (step > 0)
+    for(var i=min;i<max;i+=step) 
+      yield i;
+  else if (step < 0)
+    for(var i=max;i<min;i+=step)
+      yield i;
+}
+
+export function len(obj) {
+  if (obj.length)
+    return obj.length;
+  else if (obj.size)
+    if (typeof obj.size === 'function')
+      return obj.size();
+    else
+      return obj.size;
+  else if (typeof obj === 'object')
+    return Object.keys(obj).length;
+  else
+    throw "Type " + typeof(obj) + " has no 'len' property.";
+}
+
+export function sum(arr) {
+  let s = 0;
+  for (const item of arr)
+    s += item;
+  return s;
+  // if (len(arr) == 0)
+  //   return 0;
+
+  // if (len(arr) == 1 && Array.isArray(arr[0]))
+  //   arr = arr[0];
+
+  // return arr.reduce(function (a, b) { return a + b; }, 0);
+}
+
+export function any(iterable) {
+  for (const element of iterable)
+    if (element)
+      return true;
+  return false;
+}
+
 export function initPythonic(ra, cls) {
   String.prototype.format = String.prototype.format || function () {
     "use strict";
@@ -145,46 +202,17 @@ export function initPythonic(ra, cls) {
 
   cls.defaultdict = defaultdict;
 
-  cls.time = function() {
-    return window.Math.floor((new Date()).getTime()/1000);
-  }
+  cls.time = time;
 
-  function*range(min,max,step){
-    if (max==null) {var max = min; var min = 0;} 
-    if (step==null) {var step = 1;} 
-    if (step > 0)
-      for(var i=min;i<max;i+=step) 
-        yield i;
-    else if (step < 0)
-      for(var i=max;i<min;i+=step)
-        yield i;
-  }
   
   function*enumerate(arr){
     for (var i in arr)
       yield [i, arr[i]];
   }
   
-  cls.len = function(obj) {
-    if (obj.length)
-      return obj.length;
-    else if (obj.size)
-      if (typeof obj.size === 'function')
-        return obj.size();
-      else
-        return obj.size;
-    else if (typeof obj === 'object')
-      return Object.keys(obj).length;
-    else
-      throw "Type " + typeof(obj) + " has no 'len' property.";
-  }
+  cls.len = len;
   
-  cls.any = function(iterable) {
-      for (var index = 0; index < iterable.length; ++index) {
-          if (iterable[index]) return true;
-      }
-      return false;
-  }
+  cls.any = any;
   
   cls.all = function(iterable) {
       for (var index = 0; index < iterable.length; ++index) {
@@ -221,13 +249,5 @@ export function initPythonic(ra, cls) {
 
   cls.random = new RandomHandler();
 
-  cls.sum = function(...arr) {
-    if (len(arr) == 0)
-      return 0;
-
-    if (len(arr) == 1 && Array.isArray(arr[0]))
-      arr = arr[0];
-
-    return arr.reduce(function (a, b) { return a + b; }, 0);
-  }
+  cls.sum = sum;
 }
