@@ -25,10 +25,10 @@ export class HttpApi {
         // @todo: later: how to rate limit anonymous user?
         //   if (access_token == null)
         //     throw "access_token not provided";
-        const method = group.split(' ')[0].upper();
+        const method = group.split(' ')[0].toUpperCase();
 
         // normalize url to call
-        let _url = group.substr(len(method)+1, len(group));
+        let _url = group.substr(method.length+1, group.length);
         _url = _url.replace('//', '/');
         _url = _url.replace('//', '/');
         _url = _url.replace('//', '/');
@@ -49,7 +49,6 @@ export class HttpApi {
         if (this.access_token)
             headers['Authorization'] = 'bearer ' + this.access_token;
 
-
         const resp = await fetch(this.base_url+_url, this.options({
             method: method,
             mode: this.mode||'cors',
@@ -60,10 +59,16 @@ export class HttpApi {
             body: method == 'GET' ? undefined : JSON.stringify(data),
             headers: headers
         }));
-        
+
+        const content = await resp.json();
+
         if (resp.status == 200)
-            return await resp.json();
-        else 
-            throw resp;
+            return content;
+        else
+            throw {
+                ...resp,
+                status: resp.status,
+                body: content
+            };
     }
 }

@@ -1,5 +1,17 @@
 import { RandomHandler } from "./random";
 
+export function Enum(...args) {
+  let obj = {};
+  let i = 0;
+
+  for(let e of args) {
+    obj[e] = i++;
+  }
+
+  const en = Object.freeze(obj);
+  return en;
+}
+
 export function dict(val) {
   const dc = {};
   if (typeof val === 'undefined') return dc;
@@ -37,6 +49,13 @@ export function list(val) {
     l.push(elem);
   }
   return l;
+}
+
+export function round(n, digits) {
+  if (!digits)
+    return window.Math.round(n);
+  else
+    return parseFloat(n.toFixed(digits));
 }
 
 export function type(obj) {
@@ -221,24 +240,9 @@ export function initPythonic(ra, cls) {
       return true;
   }
   
-  cls.round = function(n, digits) {
-    if (!digits)
-      return window.Math.round(n);
-    else
-      return parseFloat(n.toFixed(digits));
-  }
+  cls.round = round;
   
-  cls.Enum = function(...args) {
-    let obj = {};
-    let i = 0;
-  
-    for(let e of args) {
-      obj[e] = i++;
-    }
-  
-    const en = Object.freeze(obj);
-    return en;
-  }
+  cls.Enum = Enum;
   
   window.Math.log = (function() {
     var log = window.Math.log;

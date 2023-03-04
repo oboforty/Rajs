@@ -5,6 +5,11 @@ export function as_async(p) {
   });
 }
 
+export function as_sync(p) {
+  // force sync execution for async method
+  
+}
+
 export function ranimate(anim_func) {
   let prev = 0, start = 0;
 

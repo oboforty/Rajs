@@ -6,7 +6,9 @@
     "build": "webpack --mode production"
   },
   "main": "./src/ra.js",
-
+  "files": [
+    "src"
+  ],
   "exports": {
     ".": "./src/ra.js",
     "./dom": "./src/dom/index.js",
