@@ -1,5 +1,5 @@
 {
-  "name": "rajs",
+  "name": "@oboforty/rajs",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -12,6 +12,7 @@
   "exports": {
     ".": "./src/ra.js",
     "./dom": "./src/dom/index.js",
+    "./utils": "./src/dom/convenience.js",
 
     "./dom/http": "./src/dom/httpapi.js",
     "./dom/utils": "./src/dom/convenience.js",

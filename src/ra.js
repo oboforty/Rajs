@@ -1,4 +1,3 @@
-import { initFormatting } from "./mods/formatting";
 import { initPythonic } from "./mods/pythonic";
 import Color from './mods/Color.js';
 import { RandomHandler } from "./mods/random";
@@ -37,13 +36,9 @@ export default {
   Matrix,
 
   // Object overrides:
-  init(polluteGlobalNamespace) {
-    polluteGlobalNamespace = polluteGlobalNamespace || false;
+  init(e) {
+    window.$ = dom;
 
-    initFormatting();
-    initPythonic(this, polluteGlobalNamespace ? window : this);
-
-    if (polluteGlobalNamespace)
-      window.$ = dom;
+    initPythonic(this, e ? window : this);
   }
 };

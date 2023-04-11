@@ -1,6 +1,5 @@
-import { dom as dom1 } from './convenience';
+import { dom as dom1, create_dict } from './convenience';
 import { ParamsDictProxy, SlugParamsHandler } from "./params";
-import { create_dict } from "./opoverride";
 import { EventContainer } from "./events";
 import { TitleHandler }  from './title';
 import { CookiesHandler, setcookie } from './cookies';

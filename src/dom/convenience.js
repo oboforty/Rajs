@@ -1,3 +1,28 @@
+
+
+
+export function create_dict(cls) {
+  const obj = typeof cls === 'function' ? new cls() : cls;
+
+  return new Proxy(obj.target, new (class {
+    get(target, name) {
+      return obj.__getitem__(name);
+    }
+
+    set(target, name, val) {
+      return obj.__setitem__(name, val);
+    }
+
+    has(target, name) {
+      return obj.__getitem__(name) !== undefined;
+    }
+
+    deleteProperty(target, name) {
+      obj.__delitem__(name);
+    }
+  })());
+}
+
 export function as_async(p) {
   // async wrapper for sync methods
   return new Promise((resolve, reject) => {
