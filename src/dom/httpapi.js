@@ -7,7 +7,7 @@ export class HttpApi {
         if (this.base_url[this.base_url.length-1] != '/')
             this.base_url += '/'
 
-        this.options = (o)=>o;
+        this.options = (a,b)=>b;
     }
 
     request_callback(group, data, cb) {
@@ -49,7 +49,7 @@ export class HttpApi {
         if (this.access_token)
             headers['Authorization'] = 'bearer ' + this.access_token;
 
-        const resp = await fetch(this.base_url+_url, this.options({
+        const resp = await fetch(this.base_url+_url, this.options(group, {
             method: method,
             mode: this.mode||'cors',
             cache: 'no-cache',
@@ -59,16 +59,23 @@ export class HttpApi {
             body: method == 'GET' ? undefined : JSON.stringify(data),
             headers: headers
         }));
+        
+        let content = await resp.text();
 
-        const content = await resp.json();
+        if (resp.headers['content-type'] === 'application/json' || !resp.headers['content-type']) {
+          try {
+            const js = JSON.parse(content);
+            content = js;
+          } catch {};
+        }
 
-        if (resp.status == 200)
-            return content;
+        if (resp.status <= 300)
+          return content;
         else
-            throw {
-                ...resp,
-                status: resp.status,
-                body: content
-            };
+          throw {
+            ...resp,
+            status: resp.status,
+            body: content
+          };
     }
 }

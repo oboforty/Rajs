@@ -40,9 +40,13 @@ export class CookiesHandler {
 
   __setitem__(key, val) {
     setcookie(key, val, this.persistent);
+
+    return true;
   }
 
   __delitem__(key) {
     setcookie(key, "", -1);
+
+    return true;
   }
 }
