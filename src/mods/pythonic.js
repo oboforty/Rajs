@@ -1,5 +1,10 @@
-import { RandomHandler } from "./random";
+import { RandomHandler } from "./random.js";
 
+/**
+ * 
+ * @param  {string[]} args 
+ * @returns {{[name: string]: number}}
+ */
 export function Enum(...args) {
   let obj = {};
   let i = 0;
@@ -39,6 +44,11 @@ export function defaultdict(deftype, isFunc) {
       }
     }
   });
+}
+
+export function*enumerate(arr){
+  for (var i in arr)
+    yield [i, arr[i]];
 }
 
 export function list(val) {
@@ -222,13 +232,8 @@ export function initPythonic(ra, cls) {
   cls.defaultdict = defaultdict;
 
   cls.time = time;
-
-  
-  function*enumerate(arr){
-    for (var i in arr)
-      yield [i, arr[i]];
-  }
-  
+  cls.enumerate = enumerate;
+    
   cls.len = len;
   
   cls.any = any;

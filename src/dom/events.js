@@ -1,4 +1,4 @@
-import { defaultdict, list } from "../mods/pythonic";
+import { defaultdict, list } from "../mods/pythonic.js";
 
 export class EventContainer {
   #events = defaultdict(list, true);
@@ -48,7 +48,7 @@ export class EventContainer {
   }
 
   get events() {
-    return Object.keys(this.#events).concat(Object.keys(this.#events_once));
+    return new Set(Object.keys(this.#events).concat(Object.keys(this.#events_once)));
   }
 
   // Remove all subscribers

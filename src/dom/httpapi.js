@@ -21,7 +21,7 @@ export class HttpApi {
         return this.request(group, data).then(cb);
     }
 
-    async request(group, data) {
+    async request(group, data, headers={}) {
         // @todo: later: how to rate limit anonymous user?
         //   if (access_token == null)
         //     throw "access_token not provided";
@@ -42,11 +42,9 @@ export class HttpApi {
                 _url += '?' + Object.keys(data).map(key => key + '=' + data[key]).join('&');
         }
 
-        const headers = {
-            'Content-Type': 'application/json'
-        };
-
-        if (this.access_token)
+        if (!headers['Content-Type'])
+            headers['Content-Type'] = 'application/json';
+        if (!headers['Authorization'] && this.access_token)
             headers['Authorization'] = 'bearer ' + this.access_token;
 
         const resp = await fetch(this.base_url+_url, this.options(group, {
@@ -57,9 +55,9 @@ export class HttpApi {
             referrerPolicy: 'no-referrer',
             credentials: 'omit',
             body: method == 'GET' ? undefined : JSON.stringify(data),
-            headers: headers
+            headers
         }));
-        
+
         let content = await resp.text();
 
         if (resp.headers['content-type'] === 'application/json' || !resp.headers['content-type']) {

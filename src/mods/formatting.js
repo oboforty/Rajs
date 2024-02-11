@@ -1,4 +1,4 @@
-import {any} from "../mods/pythonic";
+import {any} from "../mods/pythonic.js";
 
 
 /**

@@ -63,7 +63,7 @@ export class RandomHandler {
 
       return out;
     } else if (typeof arr == 'object') {
-      let newArr = Object.keys(newArr);
+      let newArr = Object.keys(arr);
       let out = [];
 
       for (let i = 0; i < N; i++)

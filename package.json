@@ -2,6 +2,7 @@
   "name": "@oboforty/rajs",
   "version": "1.0.3",
   "description": "",
+  "type": "module",
   "scripts": {
     "build": "webpack --mode production"
   },
