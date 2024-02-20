@@ -1,5 +1,3 @@
-import {any} from "../mods/pythonic.js";
-
 
 /**
  * Very simple util function to pluralize english entity names
@@ -16,11 +14,11 @@ export function pluralize(sentence) {
     const isCapital = char === char.toUpperCase();
     word = word.toLowerCase();
 
-    if (any(_pl_soft.map(c => word.endsWith(c))))
+    if (_pl_soft.some(c => word.endsWith(c)))
       // wish -> wishes
       word = word + 'es';
     else if (word.endsWith('y')) {
-      if (any(_pl_vowels.map(c => word.endsWith(c+'y'))))
+      if (_pl_vowels.some(c => word.endsWith(c+'y')))
         // boy -> boys
         word = word + 's';
       else

@@ -1,6 +1,6 @@
 {
   "name": "@oboforty/rajs",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "",
   "type": "module",
   "scripts": {
@@ -20,7 +20,6 @@
     "./dom/cookies": "./src/dom/cookies.js",
     "./dom/params": "./src/dom/params.js",
     "./dom/title": "./src/dom/title.js",
-    "./dom/hotkeys": "./src/dom/hotkeys.js",
     "./dom/file": "./src/dom/filedescriptor.js",
     "./dom/events": "./src/dom/events.js",
     "./dom/copy": "./src/dom/copy.js",
@@ -28,7 +27,6 @@
     "./matrix": "./src/mods/matrix.js",
     "./random": "./src/mods/random.js",
     "./color": "./src/mods/color.js",
-    "./pythonic": "./src/mods/pythonic.js",
     "./formatting": "./src/mods/formatting.js"
   },
   "keywords": [],

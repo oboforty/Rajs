@@ -1,4 +1,3 @@
-import { initPythonic } from "./mods/pythonic";
 import Color from './mods/Color.js';
 import { RandomHandler } from "./mods/random";
 import { as_async, dom, ranimate } from './dom/convenience';
@@ -35,10 +34,4 @@ export default {
   Color,
   Matrix,
 
-  // Object overrides:
-  init(e) {
-    window.$ = dom;
-
-    initPythonic(this, e ? window : this);
-  }
 };
